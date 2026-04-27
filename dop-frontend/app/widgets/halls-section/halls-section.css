@@ -1,0 +1,148 @@
+.halls-section {
+    margin-top: 32px;
+}
+
+.halls-section__intro {
+    margin-bottom: 18px;
+}
+
+.halls-section__title {
+    margin: 0 0 8px;
+
+    color: var(--color-text);
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.halls-section__text {
+    max-width: 720px;
+    margin: 0;
+
+    color: var(--color-muted);
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.halls-section__tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    margin-bottom: 20px;
+
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+
+    background-color: white;
+}
+
+.halls-section__tab {
+    padding: 12px 10px;
+
+    border: none;
+    border-right: 1px solid var(--color-border);
+    background-color: white;
+
+    color: var(--color-text);
+    font-size: 15px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.halls-section__tab:last-child {
+    border-right: none;
+}
+
+.halls-section__tab:hover {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+.halls-section__tab--active {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.halls-section__tab--active:hover {
+    background-color: var(--color-primary-hover);
+    color: white;
+}
+
+.halls-section__details {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    padding: 20px;
+
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+
+    background-color: var(--color-surface);
+}
+
+.halls-section__details-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.halls-section__hall-title {
+    margin: 0;
+
+    color: var(--color-text);
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.halls-section__description {
+    margin: 0;
+
+    color: var(--color-text);
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.halls-section__capacity {
+    margin: 0;
+
+    color: var(--color-muted);
+    font-size: 15px;
+}
+
+.halls-section__capacity span {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+@media (max-width: 640px) {
+    .halls-section {
+        margin-top: 24px;
+    }
+
+    .halls-section__title {
+        font-size: 21px;
+    }
+
+    .halls-section__text {
+        font-size: 15px;
+    }
+
+    .halls-section__tabs {
+        grid-template-columns: 1fr;
+    }
+
+    .halls-section__tab {
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .halls-section__tab:last-child {
+        border-bottom: none;
+    }
+
+    .halls-section__details {
+        padding: 14px;
+    }
+}

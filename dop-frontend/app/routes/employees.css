@@ -1,0 +1,11 @@
+.employees-page {
+    width: min(100% - 32px, 880px);
+    margin: 0 auto;
+    padding: 24px 0 48px;
+}
+
+.employees-page__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}

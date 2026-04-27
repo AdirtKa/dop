@@ -1,0 +1,51 @@
+/* app/shared/ui/employee-card.css */
+
+.employee-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    padding: 20px;
+
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+}
+
+.employee-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.employee-card__name {
+    margin: 0;
+
+    color: var(--color-text);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.employee-card__position {
+    margin: 0;
+
+    color: var(--color-primary);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.employee-card__experience {
+    margin: 0;
+
+    color: var(--color-muted);
+    font-size: 15px;
+}
+
+.employee-card__photo {
+    width: 140px;
+    height: 140px;
+
+    object-fit: cover;
+    border-radius: 12px;
+}
