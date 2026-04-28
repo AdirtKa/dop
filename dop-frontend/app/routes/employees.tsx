@@ -2,6 +2,7 @@ import { useLoaderData } from "react-router";
 
 import { EmployeeCard } from "~/widgets/employee-card/employee-card"
 import "./employees.css"
+import {getEmployees} from "~/shared/api/employee";
 
 type Employee = {
     id: string;
@@ -12,32 +13,15 @@ type Employee = {
 };
 
 export async function clientLoader() {
-    const employees: Employee[] = [
-        {
-            id: "1",
-            fullName: "Иванов Иван Иванович",
-            position: "Руководитель отдела",
-            experience: "8 лет",
-            photoSrc: "/images/default_avatar.jpg",
-        },
-        {
-            id: "2",
-            fullName: "Петрова Анна Сергеевна",
-            position: "Менеджер мероприятий",
-            experience: "5 лет",
-            photoSrc: "/images/default_avatar.jpg",
-        },
-        {
-            id: "3",
-            fullName: "Сидоров Алексей Павлович",
-            position: "Технический специалист",
-            experience: "4 года",
-            photoSrc: "/images/default_avatar.jpg",
-        },
-    ];
+    console.log("clientLoader employees started");
 
-    return { employees };
+    const employees = await getEmployees();
+
+    console.log("employees loaded:", employees);
+
+    return {employees};
 }
+
 
 export default function EmployeesPage() {
     const { employees } = useLoaderData<typeof clientLoader>();
