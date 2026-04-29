@@ -8,7 +8,7 @@ from sqlalchemy import pool
 from alembic import context
 from src.config import settings
 from src.models.base import Base
-from src.models import MediaFile, Employee, MediaKind
+from src.models import MediaFile, Employee, MediaKind, RefreshSession, User, UserRole
 
 config = context.config
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))

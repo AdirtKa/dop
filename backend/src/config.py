@@ -25,14 +25,19 @@ class Settings(BaseSettings):
         description="DSN Postgres",
     )
 
-    jwt_secret_key: SecretStr = Field(
-        alias="JWT_SECRET_KEY",
+    access_secret_key: SecretStr = Field(
+        alias="ACCESS_SECRET_KEY",
+    )
+
+    refresh_secret_key: SecretStr = Field(
+        alias="REFRESH_SECRET_KEY",
     )
 
     jwt_algorithm: str = Field(default="HS256", alias="JWT_ALGORITHM")
     jwt_access_expires: int = Field(default=3600, alias="JWT_ACCESS_EXPIRES")
     jwt_refresh_expires: int = Field(default=86400, alias="JWT_REFRESH_EXPIRES")
     app_env: str = Field(default="dev", alias="APP_ENV")
+    refresh_cookie_name: str = Field(default="refresh_cookie", alias="REFRESH_COOKIE_NAME")
 
     s3_endpoint_url: str = Field(
         default="http://127.0.0.1:9000",
@@ -63,6 +68,12 @@ class Settings(BaseSettings):
     def is_dev(self) -> bool:
         """Check if backend running in dev mode."""
         return self.app_env == "dev"
+
+    @property
+    def refresh_cookie_path(self) -> str:
+        """Get refresh cookie path."""
+        return "/" if self.is_dev else "/api/auth"
+
 
     @property
     def database_uri(self) -> str:

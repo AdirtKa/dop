@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from src.routes import root_router, employee_router
+from src.routes import root_router, employee_router, auth_router
 
 app = FastAPI()
 
@@ -18,6 +18,7 @@ app.add_middleware(
 )
 
 app.include_router(employee_router, prefix="/employee", tags=["employee"])
+app.include_router(auth_router, prefix="/auth", tags=["auth"])
 app.include_router(root_router, prefix="")
 
 
