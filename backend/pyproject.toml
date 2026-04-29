@@ -9,6 +9,7 @@ dependencies = [
     "boto3>=1.42.97",
     "fastapi>=0.136.1",
     "psycopg2-binary>=2.9.12",
+    "pydantic>=2.13.3",
     "pydantic-settings>=2.14.0",
     "python-multipart>=0.0.27",
     "sqlalchemy>=2.0.49",
