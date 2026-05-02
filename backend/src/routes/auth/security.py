@@ -2,19 +2,14 @@ import hashlib
 import hmac
 
 import jwt
-from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
-from pwdlib import PasswordHash
 import uuid
 from datetime import datetime, UTC, timedelta
 from typing import Any
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from starlette import status
+from pwdlib import PasswordHash
 
 from src.config import settings
 from src.models import User
-from src.session import get_session
 
 password_hash = PasswordHash.recommended()
 

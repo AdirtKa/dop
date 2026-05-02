@@ -15,5 +15,8 @@ async def read_employees(session: SessionDependency):
     try:
         employees = await get_employees(session)
         return employees
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to load employees",
+        )

@@ -6,13 +6,14 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from starlette import status
 
+from src.config import settings
 from src.models import User
 from src.models.user import UserRole
 from src.routes.auth.security import decode_access_token
 from src.session import get_session
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/api/auth/login"
+    tokenUrl=settings.auth_token_url
 )
 
 
@@ -58,3 +59,8 @@ def require_roles(*allowed_roles: UserRole):
         return current_user
 
     return checker
+
+
+require_employee = require_roles(UserRole.EMPLOYEE, UserRole.ADMIN)
+require_admin = require_roles(UserRole.ADMIN)
+require_organization = require_roles(UserRole.ORGANIZATION, UserRole.ADMIN)
