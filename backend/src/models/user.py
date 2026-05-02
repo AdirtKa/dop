@@ -1,16 +1,15 @@
 """ORM-модели пользователей и ролей."""
 
-import enum
-import uuid
 from datetime import datetime
+import enum
 from typing import TYPE_CHECKING
+import uuid
 
-from sqlalchemy import String, Boolean, DateTime, func, Text, Enum
+from sqlalchemy import Boolean, DateTime, Enum, String, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
-
 
 if TYPE_CHECKING:
     from src.models.refresh_session import RefreshSession

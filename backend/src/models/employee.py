@@ -1,15 +1,14 @@
 """ORM-модель сотрудника."""
 
-import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
+import uuid
 
-from sqlalchemy import Text, ForeignKey, DateTime, func
+from sqlalchemy import DateTime, ForeignKey, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
-
 
 if TYPE_CHECKING:
     from src.models.media_file import MediaFile

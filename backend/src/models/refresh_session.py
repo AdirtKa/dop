@@ -1,15 +1,14 @@
 """ORM-модель refresh-сессии пользователя."""
 
-import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
+import uuid
 
-from sqlalchemy import ForeignKey, DateTime, func, String, UniqueConstraint, Text
+from sqlalchemy import DateTime, ForeignKey, String, Text, UniqueConstraint, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
-
 
 if TYPE_CHECKING:
     from src.models.user import User

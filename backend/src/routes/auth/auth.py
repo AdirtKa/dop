@@ -1,7 +1,7 @@
 """HTTP-маршруты аутентификации."""
 
-from sqlalchemy.ext.asyncio.session import AsyncSession
 from fastapi import APIRouter, Depends, Request, Response
+from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.schemas.auth import LoginRequest, LoginResponse
 from src.schemas.token import TokenResponse

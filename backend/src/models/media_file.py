@@ -1,16 +1,15 @@
 """ORM-модели медиафайлов и их типов."""
 
-import enum
-import uuid
 from datetime import datetime
+import enum
 from typing import TYPE_CHECKING
+import uuid
 
 from sqlalchemy import DateTime, Enum, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
-
 
 if TYPE_CHECKING:
     from .employee import Employee

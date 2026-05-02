@@ -3,8 +3,8 @@
 import hmac
 import uuid
 
-import jwt
 from fastapi import HTTPException, Request, Response
+import jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 

@@ -39,9 +39,7 @@ class Settings(BaseSettings):
     jwt_refresh_expires: int = Field(default=86400, alias="JWT_REFRESH_EXPIRES")
     app_env: str = Field(default="dev", alias="APP_ENV")
     api_prefix: str = Field(default="", alias="API_PREFIX")
-    refresh_cookie_name: str = Field(
-        default="refresh_cookie", alias="REFRESH_COOKIE_NAME"
-    )
+    refresh_cookie_name: str = Field(default="refresh_cookie", alias="REFRESH_COOKIE_NAME")
     cookie_secure: bool = Field(default=False, alias="COOKIE_SECURE")
     cookie_samesite: Literal["lax", "strict", "none"] = Field(
         default="lax", alias="COOKIE_SAMESITE"
@@ -107,11 +105,7 @@ class Settings(BaseSettings):
     @property
     def cors_origins(self) -> list[str]:
         """Разбирает список разрешённых CORS origin из переменной окружения."""
-        return [
-            origin.strip()
-            for origin in self.cors_origins_raw.split(",")
-            if origin.strip()
-        ]
+        return [origin.strip() for origin in self.cors_origins_raw.split(",") if origin.strip()]
 
     @property
     def database_uri(self) -> str:

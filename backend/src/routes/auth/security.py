@@ -1,13 +1,12 @@
 """Криптографические и JWT-хелперы для аутентификации."""
 
+from datetime import UTC, datetime, timedelta
 import hashlib
 import hmac
+from typing import Any
+import uuid
 
 import jwt
-import uuid
-from datetime import datetime, UTC, timedelta
-from typing import Any
-
 from pwdlib import PasswordHash
 
 from src.config import settings

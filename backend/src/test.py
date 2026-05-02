@@ -5,9 +5,9 @@ import getpass
 
 from sqlalchemy import select
 
-from src.session import async_session
 from src.models.user import User, UserRole
 from src.routes.auth.security import get_password_hash
+from src.session import async_session
 
 
 async def main() -> None:

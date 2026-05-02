@@ -1,9 +1,10 @@
 """HTTP-маршруты для работы со списком сотрудников."""
 
-from typing import List, Annotated
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.repository.employee import get_employees
 from src.schemas.employee import EmployeeRead
 from src.session import get_session
@@ -12,7 +13,7 @@ router = APIRouter()
 SessionDependency = Annotated[AsyncSession, Depends(get_session)]
 
 
-@router.get("/", response_model=List[EmployeeRead])
+@router.get("/", response_model=list[EmployeeRead])
 async def read_employees(session: SessionDependency):
     """Возвращает список сотрудников для клиентского каталога."""
     try:
