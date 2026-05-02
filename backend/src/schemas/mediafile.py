@@ -1,9 +1,13 @@
+"""Pydantic-схемы для представления медиафайлов."""
+
 from pydantic import BaseModel, ConfigDict
 from uuid import UUID
 from datetime import datetime
 
 
 class MediaFileRead(BaseModel):
+    """Схема медиафайла для ответов API."""
+
     id: UUID
     public_url: str | None
     mime_type: str

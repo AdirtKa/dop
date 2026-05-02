@@ -1,3 +1,5 @@
+"""Pydantic-схемы пользователей."""
+
 import uuid
 
 from pydantic import BaseModel
@@ -7,6 +9,8 @@ from src.schemas.token import TokenResponse
 
 
 class User(BaseModel):
+    """Базовая схема пользователя."""
+
     username: str
     email: str | None = None
     full_name: str | None = None
@@ -14,6 +18,8 @@ class User(BaseModel):
 
 
 class UserInDB(User):
+    """Схема пользователя с полями, сохраняемыми в базе данных."""
+
     hashed_password: str
 
 
@@ -21,6 +27,8 @@ class UserInDB(User):
 
 
 class UserResponse(BaseModel):
+    """Схема пользователя для ответов API."""
+
     id: uuid.UUID
     username: str
     role: UserRole
@@ -29,6 +37,5 @@ class UserResponse(BaseModel):
     model_config = {
         "from_attributes": True,
     }
-
 
 

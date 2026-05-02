@@ -1,3 +1,5 @@
+"""Публичные экспорты Pydantic-схем."""
+
 from .employee import EmployeeRead
 from .mediafile import MediaFileRead
 from .token import TokenData

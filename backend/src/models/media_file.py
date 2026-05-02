@@ -1,3 +1,5 @@
+"""ORM-модели медиафайлов и их типов."""
+
 import enum
 import uuid
 from datetime import datetime
@@ -15,11 +17,15 @@ if TYPE_CHECKING:
 
 
 class MediaKind(str, enum.Enum):
+    """Перечисление типов медиафайлов."""
+
     image = "image"
     video = "video"
 
 
 class MediaFile(Base):
+    """ORM-модель файла, хранящегося во внешнем файловом хранилище."""
+
     __tablename__ = "media_files"
 
     id: Mapped[uuid.UUID] = mapped_column(

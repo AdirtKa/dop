@@ -1,3 +1,5 @@
+"""HTTP-маршруты аутентификации."""
+
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 
@@ -16,6 +18,7 @@ async def login(
         response: Response,
         session: AsyncSession = Depends(get_session),
 ):
+    """Обрабатывает вход пользователя по логину и паролю."""
     return await login_user(
         session=session,
         request=request,
@@ -31,6 +34,7 @@ async def refresh(
         response: Response,
         session: AsyncSession = Depends(get_session),
 ):
+    """Обновляет access-token и выполняет ротацию refresh-token."""
     return await refresh_tokens(
         session=session,
         request=request,
@@ -44,6 +48,7 @@ async def logout(
     response: Response,
     session: AsyncSession = Depends(get_session),
 ):
+    """Завершает текущую refresh-сессию пользователя."""
     return await logout_user(
         session=session,
         request=request,

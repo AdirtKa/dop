@@ -1,3 +1,5 @@
+"""Репозиторий для запросов, связанных с аутентификацией."""
+
 import uuid
 
 from sqlalchemy import select
@@ -11,6 +13,7 @@ async def get_user_by_username(
     session: AsyncSession,
     username: str,
 ) -> User | None:
+    """Ищет пользователя по имени пользователя."""
     result = await session.execute(
         select(User).where(User.username == username)
     )
@@ -23,6 +26,7 @@ async def get_refresh_session_by_jti(
     *,
     for_update: bool = False,
 ) -> RefreshSession | None:
+    """Возвращает refresh-сессию по `jti`, при необходимости блокируя строку."""
     stmt = select(RefreshSession).where(RefreshSession.refresh_jti == refresh_jti)
 
     if for_update:

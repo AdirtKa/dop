@@ -1,3 +1,5 @@
+"""Сервисный слой для сценариев аутентификации и refresh-token rotation."""
+
 import hmac
 import uuid
 
@@ -31,6 +33,7 @@ async def authenticate_user(
     username: str,
     password: str,
 ) -> User | None:
+    """Проверяет логин и пароль пользователя."""
     user = await get_user_by_username(session, username)
 
     if user is None:
@@ -49,6 +52,7 @@ async def login_user(
     username: str,
     password: str,
 ) -> LoginResponse:
+    """Аутентифицирует пользователя и создаёт новую refresh-сессию."""
     user = await authenticate_user(session, username, password)
 
     if user is None:
@@ -95,6 +99,7 @@ async def refresh_tokens(
     request: Request,
     response: Response,
 ) -> TokenResponse:
+    """Выполняет refresh access-token и ротацию refresh-token."""
     refresh_token = request.cookies.get(settings.refresh_cookie_name)
 
     if not refresh_token:
@@ -211,6 +216,7 @@ async def logout_user(
     request: Request,
     response: Response,
 ) -> dict[str, str]:
+    """Отзывает refresh-сессию пользователя и очищает cookie."""
     refresh_token = request.cookies.get(settings.refresh_cookie_name)
 
     if refresh_token:

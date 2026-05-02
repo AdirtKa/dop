@@ -1,3 +1,5 @@
+"""ORM-модель refresh-сессии пользователя."""
+
 import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
@@ -14,6 +16,8 @@ if TYPE_CHECKING:
 
 
 class RefreshSession(Base):
+    """ORM-модель сохранённой refresh-сессии."""
+
     __tablename__ = "refresh_sessions"
 
     __table_args__ = (

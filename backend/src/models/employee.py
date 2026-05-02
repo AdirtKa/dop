@@ -1,3 +1,5 @@
+"""ORM-модель сотрудника."""
+
 import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
@@ -14,6 +16,8 @@ if TYPE_CHECKING:
 
 
 class Employee(Base):
+    """ORM-модель сотрудника, отображаемого в каталоге."""
+
     __tablename__ = "employees"
 
     id: Mapped[uuid.UUID] = mapped_column(

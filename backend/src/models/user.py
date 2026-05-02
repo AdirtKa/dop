@@ -1,3 +1,5 @@
+"""ORM-модели пользователей и ролей."""
+
 import enum
 import uuid
 from datetime import datetime
@@ -15,12 +17,16 @@ if TYPE_CHECKING:
 
 
 class UserRole(str, enum.Enum):
+    """Перечисление ролей пользователей."""
+
     EMPLOYEE = "employee"
     ADMIN = "admin"
     ORGANIZATION = "organization"
 
 
 class User(Base):
+    """ORM-модель пользователя системы."""
+
     __tablename__ = "users"
 
     id: Mapped[uuid.UUID] = mapped_column(

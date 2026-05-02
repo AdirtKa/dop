@@ -1,3 +1,5 @@
+"""Точка входа FastAPI-приложения и настройка middleware."""
+
 import uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
@@ -21,7 +23,7 @@ app.include_router(root_router, prefix="")
 
 
 def main() -> None:
-    """Entry point."""
+    """Запускает приложение через Uvicorn."""
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 

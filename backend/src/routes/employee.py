@@ -1,3 +1,5 @@
+"""HTTP-маршруты для работы со списком сотрудников."""
+
 from typing import List, Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -12,6 +14,7 @@ SessionDependency = Annotated[AsyncSession, Depends(get_session)]
 
 @router.get("/", response_model=List[EmployeeRead])
 async def read_employees(session: SessionDependency):
+    """Возвращает список сотрудников для клиентского каталога."""
     try:
         employees = await get_employees(session)
         return employees

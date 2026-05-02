@@ -1,3 +1,5 @@
+"""Служебный CLI-скрипт для ручного создания пользователя."""
+
 import asyncio
 import getpass
 
@@ -9,6 +11,7 @@ from src.routes.auth.security import get_password_hash
 
 
 async def main() -> None:
+    """Создаёт пользователя через консольный ввод."""
     username = input("Username: ").strip()
     password = getpass.getpass("Password: ").strip()
 

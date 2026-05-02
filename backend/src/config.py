@@ -1,4 +1,4 @@
-"""Load data from .env file."""
+"""Загрузка и представление настроек приложения из `.env`."""
 
 from pathlib import Path
 from typing import Literal
@@ -11,7 +11,7 @@ ENV_PATH = BASE_DIR.parent / ".env"
 
 
 class Settings(BaseSettings):
-    """Base project settings."""
+    """Настройки backend-приложения."""
 
     model_config = SettingsConfigDict(
         env_file=str(ENV_PATH),
@@ -76,12 +76,12 @@ class Settings(BaseSettings):
 
     @property
     def is_dev(self) -> bool:
-        """Check if backend running in dev mode."""
+        """Проверяет, запущено ли приложение в режиме разработки."""
         return self.app_env == "dev"
 
     @property
     def normalized_api_prefix(self) -> str:
-        """Normalize external API prefix."""
+        """Нормализует внешний префикс API."""
         prefix = self.api_prefix.strip()
 
         if not prefix:
@@ -92,17 +92,17 @@ class Settings(BaseSettings):
 
     @property
     def refresh_cookie_path(self) -> str:
-        """Get refresh cookie path."""
+        """Возвращает путь, на который должна быть привязана refresh-cookie."""
         return f"{self.normalized_api_prefix}/auth" or "/auth"
 
     @property
     def auth_token_url(self) -> str:
-        """OpenAPI token URL."""
+        """Возвращает URL логина для OpenAPI-схемы."""
         return f"{self.refresh_cookie_path}/login"
 
     @property
     def cors_origins(self) -> list[str]:
-        """Parse allowed CORS origins from env."""
+        """Разбирает список разрешённых CORS origin из переменной окружения."""
         return [
             origin.strip()
             for origin in self.cors_origins_raw.split(",")
@@ -112,7 +112,7 @@ class Settings(BaseSettings):
 
     @property
     def database_uri(self) -> str:
-        """Backward compatible alias used by some modules."""
+        """Возвращает обратнос совместимый алиас для URL базы данных."""
         return self.database_url
 
 

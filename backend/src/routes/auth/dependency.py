@@ -1,3 +1,5 @@
+"""Зависимости аутентификации и проверки ролей."""
+
 import uuid
 
 import jwt
@@ -21,6 +23,7 @@ async def get_current_user(
         token: str = Depends(oauth2_scheme),
         session: AsyncSession = Depends(get_session),
 ) -> User:
+    """Возвращает текущего пользователя по access-token."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -47,9 +50,11 @@ async def get_current_user(
 
 
 def require_roles(*allowed_roles: UserRole):
+    """Создаёт dependency, ограничивающую доступ указанными ролями."""
     async def checker(
             current_user: User = Depends(get_current_user),
     ) -> User:
+        """Проверяет, что у текущего пользователя есть допустимая роль."""
         if current_user.role not in allowed_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,

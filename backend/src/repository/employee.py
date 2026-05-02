@@ -1,3 +1,5 @@
+"""Репозиторий для чтения сотрудников."""
+
 from sqlalchemy import select
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,6 +13,7 @@ async def get_employees(
     limit: int = 20,
     offset: int = 0,
 ) -> list[Employee]:
+    """Возвращает список сотрудников с подгруженной фотографией."""
     stmt = (
         select(Employee)
         .options(selectinload(Employee.photo))
