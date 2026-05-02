@@ -39,9 +39,13 @@ class Settings(BaseSettings):
     jwt_refresh_expires: int = Field(default=86400, alias="JWT_REFRESH_EXPIRES")
     app_env: str = Field(default="dev", alias="APP_ENV")
     api_prefix: str = Field(default="", alias="API_PREFIX")
-    refresh_cookie_name: str = Field(default="refresh_cookie", alias="REFRESH_COOKIE_NAME")
+    refresh_cookie_name: str = Field(
+        default="refresh_cookie", alias="REFRESH_COOKIE_NAME"
+    )
     cookie_secure: bool = Field(default=False, alias="COOKIE_SECURE")
-    cookie_samesite: Literal["lax", "strict", "none"] = Field(default="lax", alias="COOKIE_SAMESITE")
+    cookie_samesite: Literal["lax", "strict", "none"] = Field(
+        default="lax", alias="COOKIE_SAMESITE"
+    )
     cookie_domain: str | None = Field(default=None, alias="COOKIE_DOMAIN")
     cors_origins_raw: str = Field(
         default="http://localhost:5173,http://127.0.0.1:5173",
@@ -108,7 +112,6 @@ class Settings(BaseSettings):
             for origin in self.cors_origins_raw.split(",")
             if origin.strip()
         ]
-
 
     @property
     def database_uri(self) -> str:

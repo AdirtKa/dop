@@ -5,7 +5,6 @@ import uuid
 from pydantic import BaseModel
 
 from src.models.user import UserRole
-from src.schemas.token import TokenResponse
 
 
 class User(BaseModel):
@@ -23,9 +22,6 @@ class UserInDB(User):
     hashed_password: str
 
 
-
-
-
 class UserResponse(BaseModel):
     """Схема пользователя для ответов API."""
 
@@ -37,5 +33,3 @@ class UserResponse(BaseModel):
     model_config = {
         "from_attributes": True,
     }
-
-

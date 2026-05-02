@@ -33,7 +33,11 @@ def create_refresh_token(user_id: uuid.UUID, jti: uuid.UUID) -> str:
         "iat": datetime.now(UTC),
     }
 
-    return jwt.encode(payload, settings.refresh_secret_key.get_secret_value(), algorithm=settings.jwt_algorithm)
+    return jwt.encode(
+        payload,
+        settings.refresh_secret_key.get_secret_value(),
+        algorithm=settings.jwt_algorithm,
+    )
 
 
 def hash_refresh_token(refresh_token: str) -> str:

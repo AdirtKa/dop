@@ -14,9 +14,7 @@ async def get_user_by_username(
     username: str,
 ) -> User | None:
     """Ищет пользователя по имени пользователя."""
-    result = await session.execute(
-        select(User).where(User.username == username)
-    )
+    result = await session.execute(select(User).where(User.username == username))
     return result.scalar_one_or_none()
 
 

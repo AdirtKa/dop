@@ -35,9 +35,7 @@ async def main() -> None:
         return
 
     async with async_session() as session:
-        result = await session.execute(
-            select(User).where(User.username == username)
-        )
+        result = await session.execute(select(User).where(User.username == username))
         existing_user = result.scalar_one_or_none()
 
         if existing_user is not None:

@@ -17,8 +17,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(employee_router, prefix=f"{settings.normalized_api_prefix}/employee", tags=["employee"])
-app.include_router(auth_router, prefix=f"{settings.normalized_api_prefix}/auth", tags=["auth"])
+app.include_router(
+    employee_router,
+    prefix=f"{settings.normalized_api_prefix}/employee",
+    tags=["employee"],
+)
+app.include_router(
+    auth_router, prefix=f"{settings.normalized_api_prefix}/auth", tags=["auth"]
+)
 app.include_router(root_router, prefix="")
 
 
@@ -27,5 +33,5 @@ def main() -> None:
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
