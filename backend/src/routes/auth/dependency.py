@@ -32,17 +32,17 @@ async def get_current_user(
         payload = decode_access_token(token)
 
         if payload.get("type") != "access":
-            raise credentials_exception
+            raise credentials_exception from None
 
         user_id = uuid.UUID(payload["sub"])
 
     except (jwt.InvalidTokenError, ValueError, KeyError):
-        raise credentials_exception
+        raise credentials_exception from None
 
     user = await session.get(User, user_id)
 
     if user is None or not user.is_active:
-        raise credentials_exception
+        raise credentials_exception from None
 
     return user
 

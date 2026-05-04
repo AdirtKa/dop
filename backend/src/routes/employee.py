@@ -23,4 +23,4 @@ async def read_employees(session: SessionDependency):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to load employees",
-        )
+        ) from None

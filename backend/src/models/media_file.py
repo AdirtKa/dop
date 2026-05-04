@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from .employee import Employee
 
 
-class MediaKind(str, enum.Enum):
+class MediaKind(enum.StrEnum):
     """Перечисление типов медиафайлов."""
 
     image = "image"

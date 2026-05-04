@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from src.models.refresh_session import RefreshSession
 
 
-class UserRole(str, enum.Enum):
+class UserRole(enum.StrEnum):
     """Перечисление ролей пользователей."""
 
     EMPLOYEE = "employee"
