@@ -5,12 +5,14 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.logger import get_error_logger
 from src.repository.employee import get_employees
 from src.schemas.employee import EmployeeRead
 from src.session import get_session
 
 router = APIRouter()
 SessionDependency = Annotated[AsyncSession, Depends(get_session)]
+error_logger = get_error_logger()
 
 
 @router.get("/", response_model=list[EmployeeRead])
@@ -19,8 +21,11 @@ async def read_employees(session: SessionDependency):
     try:
         employees = await get_employees(session)
         return employees
-    except Exception:
+    except HTTPException:
+        raise
+    except Exception as exc:
+        error_logger.exception("Failed to load employees list", exc_info=exc)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to load employees",
-        ) from None
+        ) from exc
