@@ -73,3 +73,249 @@ Traceback (most recent call last):
   File "/home/adirtka/Projects/PyCharmProjects/dop/backend/tests/test_auth_service.py", line 488, in raise_invalid
     raise jwt.InvalidTokenError("bad token")
 jwt.exceptions.InvalidTokenError: bad token
+2026-05-05 22:26:28,546 | ERROR | Unhandled error during POST "/auth/login" from client=127.0.0.1
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2531, in get_property
+    return self._props[key]
+           ~~~~~~~~~~~^^^^^
+KeyError: 'employees'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\danle\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\main.py", line 44, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\routes\auth\auth.py", line 25, in login
+    return await login_user(
+           ^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\services\auth.py", line 84, in login_user
+    user = await authenticate_user(session, username, password)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\services\auth.py", line 65, in authenticate_user
+    user = await get_user_by_username(session, username)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\repository\auth.py", line 17, in get_user_by_username
+    result = await session.execute(select(User).where(User.username == username))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1633, in _execute_clauseelement
+    compiled_sql, extracted_params, cache_hit = elem._compile_w_cache(
+                                                ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 716, in _compile_w_cache
+    compiled_sql = self._compiler(
+                   ^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 324, in _compiler
+    return dialect.statement_compiler(dialect, self, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\compiler.py", line 1461, in __init__
+    Compiled.__init__(self, dialect, statement, **kwargs)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\compiler.py", line 901, in __init__
+    self.string = self.process(self.statement, **compile_kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\compiler.py", line 947, in process
+    return obj._compiler_dispatch(self, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\visitors.py", line 138, in _compiler_dispatch
+    return meth(self, **kw)  # type: ignore  # noqa: E501
+           ^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\compiler.py", line 4809, in visit_select
+    compile_state = select_stmt._compile_state_factory(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\base.py", line 775, in create_for_statement
+    return klass.create_for_statement(statement, compiler, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 447, in create_for_statement
+    return cls._create_orm_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 1175, in _create_orm_context
+    _QueryEntity.to_compile_state(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 2628, in to_compile_state
+    _MapperEntity(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 2708, in __init__
+    entity._post_inspect
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 1235, in __get__
+    obj.__dict__[self.__name__] = result = self.fget(obj)
+                                           ^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2733, in _post_inspect
+    self._check_configure()
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2410, in _check_configure
+    _configure_registries({self.registry}, cascade=True)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 4227, in _configure_registries
+    _do_configure_registries(registries, cascade)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 4268, in _do_configure_registries
+    mapper._post_configure_properties()
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2427, in _post_configure_properties
+    prop.init()
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 595, in init
+    self.do_init()
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\relationships.py", line 1660, in do_init
+    self._generate_backref()
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\relationships.py", line 2144, in _generate_backref
+    self._add_reverse_property(self.back_populates)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\relationships.py", line 1591, in _add_reverse_property
+    other = self.mapper.get_property(key, _configure_mappers=False)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2533, in get_property
+    raise sa_exc.InvalidRequestError(
+sqlalchemy.exc.InvalidRequestError: Mapper 'Mapper[MediaFile(media_files)]' has no property 'employees'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called.
+2026-05-05 22:28:54,808 | WARNING | Login failed for username="adirtka" from client=127.0.0.1: invalid credentials
+2026-05-05 22:29:02,369 | WARNING | Login failed for username="adirtka" from client=127.0.0.1: invalid credentials
+2026-05-05 22:29:16,837 | WARNING | Login failed for username="adirtka" from client=127.0.0.1: invalid credentials
+2026-05-05 22:29:22,902 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-05 22:33:40,879 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-05 22:37:05,556 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-05 22:38:55,563 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-05 22:40:43,275 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-05 22:41:43,566 | ERROR | Failed to create employee
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\src\routes\employee.py", line 58, in create_employee
+    presigned_url: str = get_presigned_put_url(settings.s3_bucket_name, storage_key)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\services\media.py", line 16, in get_presigned_put_url
+    upload_url: str = minio_client.get_presigned_url(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\minio\api.py", line 2476, in get_presigned_url
+    region = self._get_region(bucket_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\minio\api.py", line 498, in _get_region
+    response = self._url_open(
+               ^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\minio\api.py", line 272, in _url_open
+    headers = sign_v4_s3(
+              ^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\minio\signer.py", line 229, in sign_v4_s3
+    return _sign_v4(
+           ^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\minio\signer.py", line 207, in _sign_v4
+    signing_key = _get_signing_key(
+                  ^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\minio\signer.py", line 152, in _get_signing_key
+    ("AWS4" + secret_key).encode(),
+     ~~~~~~~^~~~~~~~~~~~
+TypeError: can only concatenate str (not "SecretStr") to str
+2026-05-05 22:43:10,038 | ERROR | Failed to create employee
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\src\routes\employee.py", line 69, in create_employee
+    photo=employee.photo,
+          ^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1131, in _fire_loader_callables
+    return self.callable_(state, passive)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 978, in _load_for_state
+    return self._emit_lazyload(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 1079, in _emit_lazyload
+    return loading.load_on_pk_identity(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2366, in _handle_dbapi_exception
+    raise exc_info[1].with_traceback(exc_info[2])
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)

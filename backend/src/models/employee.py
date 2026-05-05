@@ -48,7 +48,6 @@ class Employee(Base):
 
     photo: Mapped["MediaFile | None"] = relationship(
         "MediaFile",
-        back_populates="employees",
     )
 
     created_at: Mapped[datetime] = mapped_column(

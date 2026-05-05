@@ -22,8 +22,8 @@ services:
     container_name: dop_minio
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-dop_admin}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-dop_admin_password}
+      MINIO_ROOT_USER: dop_adirtka
+      MINIO_ROOT_PASSWORD: dop_adirtka_kettle
     volumes:
       - minio_data:/data
     ports:

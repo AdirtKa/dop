@@ -1,11 +1,28 @@
 # Test your FastAPI endpoints
 
-GET http://127.0.0.1:8000/
+POST http://127.0.0.1:8000/auth/login/
 Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "adirtka",
+  "password": "adirtka_kettle"
+}
 
 ###
 
-GET http://127.0.0.1:8000/hello/User
-Accept: application/json
+GET http://127.0.0.1:8000/employee/
 
 ###
+
+POST http://127.0.0.1:8000/employee/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMWNjZjUwZC1mYTliLTQzNWEtOWIxZi0yY2ZlY2E4ZWM4Y2IiLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3OTg0NzM1LCJleHAiOjE3Nzc5ODgzMzV9.4PSYPIMnTFR3zoLpJ6P5-PMVel3Qp8n3bGYAAAukX9Y
+
+{
+  "full_name": "Maksim",
+  "position": "Idiot",
+  "experience": "21 years",
+  "photo_filename": "maksim.jpg",
+  "content_type": "image/jpeg"
+}

@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.models.employee import Employee
+from src.schemas import EmployeeCreate
 
 
 async def get_employees(
@@ -24,3 +25,18 @@ async def get_employees(
     result = await session.execute(stmt)
 
     return list(result.scalars().all())
+
+
+async def add_employee(
+    session: AsyncSession,
+    employee: EmployeeCreate,
+) -> Employee:
+    employee = Employee(
+        full_name=employee.full_name,
+        position=employee.position,
+        experience=employee.experience,
+    )
+    session.add(employee)
+    await session.commit()
+    await session.refresh(employee)
+    return employee
