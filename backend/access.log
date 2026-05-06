@@ -38,3 +38,5 @@
 2026-05-05 23:03:13,746 | INFO | method=GET path="/api/employee/" status=404 client=127.0.0.1 duration_ms=0.55
 2026-05-05 23:03:21,493 | INFO | method=GET path="//employee/" status=404 client=127.0.0.1 duration_ms=0.46
 2026-05-05 23:03:32,204 | INFO | method=GET path="/employee/" status=200 client=127.0.0.1 duration_ms=59.52
+2026-05-06 09:55:30,471 | INFO | method=GET path="/" status=404 client=127.0.0.1 duration_ms=0.43
+2026-05-06 09:55:30,557 | INFO | method=GET path="/favicon.ico" status=404 client=127.0.0.1 duration_ms=0.23

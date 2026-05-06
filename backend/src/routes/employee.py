@@ -9,10 +9,24 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.config import settings
 from src.logger import get_error_logger
 from src.models import Employee, User
-from src.repository.employee import add_employee, get_employees
+from src.repository.employee import (
+    add_employee,
+    delete_employee_by_id,
+    get_employee_by_id,
+    get_employees,
+    patch_employee,
+    update_employee_photo_data,
+)
 from src.repository.media import attach_employee_photo
 from src.routes.auth.dependency import require_admin
-from src.schemas.employee import EmployeeCreate, EmployeeRead, EmployeeUpdateResponse
+from src.schemas import MediaFileRead
+from src.schemas.employee import (
+    EmployeeCreateRequest,
+    EmployeePatchRequest,
+    EmployeePhotoUpdateRequest,
+    EmployeePutResponse,
+    EmployeeRead,
+)
 from src.services.media import get_presigned_put_url
 from src.session import get_session
 
@@ -25,6 +39,18 @@ ALLOWED_IMAGE_TYPES = {
     "image/png",
     "image/webp",
 }
+
+
+def build_employee_photo_payload(
+    *,
+    photo_filename: str,
+) -> tuple[str, str, str]:
+    """Генерирует ключ хранения и URL-адреса для загрузки фото сотрудника."""
+    ext: str = photo_filename.rsplit(".", maxsplit=1)[-1]
+    storage_key: str = f"employees/{uuid.uuid4()}.{ext}"
+    presigned_url: str = get_presigned_put_url(settings.s3_bucket_name, storage_key)
+    public_url: str = f"{settings.s3_public_url}/{storage_key}"
+    return storage_key, presigned_url, public_url
 
 
 @router.get("/", response_model=list[EmployeeRead])
@@ -43,30 +69,42 @@ async def read_employees(session: SessionDependency):
         ) from exc
 
 
-@router.post("/", response_model=EmployeeUpdateResponse)
+@router.post("/", response_model=EmployeePutResponse)
 async def create_employee(
     session: SessionDependency,
-    employee_data: EmployeeCreate,
-    current_user: Annotated[User, Depends(require_admin)],  # noqa ARG001
+    employee_data: EmployeeCreateRequest,
+    _: Annotated[User, Depends(require_admin)],
 ):
     """Создает сотрудника в базе данных и возвращает его."""
 
     try:
-        if employee_data.content_type not in ALLOWED_IMAGE_TYPES:
+        if (
+            employee_data.content_type is not None
+            and employee_data.content_type not in ALLOWED_IMAGE_TYPES
+        ):
             raise HTTPException(
                 status_code=400,
                 detail="Недопустимый тип файла",
             )
-        ext: str = employee_data.photo_filename.split(".")[-1]
-        storage_key: str = f"employees/{uuid.uuid4()}.{ext}"
-        presigned_url: str = get_presigned_put_url(settings.s3_bucket_name, storage_key)
-        public_url: str = f"{settings.s3_public_url}/{storage_key}"
 
         employee: Employee = await add_employee(session, employee_data)
-        employee, photo = await attach_employee_photo(
-            session, employee, storage_key, public_url, employee_data.content_type
-        )
-        return EmployeeUpdateResponse(
+        photo: MediaFileRead | None = None
+        presigned_url: str | None = None
+
+        if employee_data.photo_filename is not None and employee_data.content_type is not None:
+            storage_key, presigned_url, public_url = build_employee_photo_payload(
+                photo_filename=employee_data.photo_filename,
+            )
+            employee, attached_photo = await attach_employee_photo(
+                session,
+                employee,
+                storage_key,
+                public_url,
+                employee_data.content_type,
+            )
+            photo = MediaFileRead.model_validate(attached_photo)
+
+        return EmployeePutResponse(
             id=employee.id,
             full_name=employee.full_name,
             position=employee.position,
@@ -84,3 +122,102 @@ async def create_employee(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to create employee",
         ) from exc
+
+
+@router.patch("/{employee_id}", response_model=EmployeeRead)
+async def update_employee(
+    session: SessionDependency,
+    employee_id: uuid.UUID,
+    employee_data: EmployeePatchRequest,
+    _: Annotated[User, Depends(require_admin)],
+):
+    """Обновляет текстовые поля сотрудника по идентификатору."""
+    try:
+        employee = await patch_employee(session, employee_id, employee_data)
+        if employee is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Failed to update employee",
+            )
+        return employee
+
+    except HTTPException:
+        raise
+    except Exception as exc:
+        error_logger.exception("Failed to update employee", exc_info=exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update employee",
+        ) from exc
+
+
+@router.put("/{employee_id}/photo", response_model=EmployeePutResponse)
+async def update_employee_photo(
+    session: SessionDependency,
+    employee_id: uuid.UUID,
+    employee_data: EmployeePhotoUpdateRequest,
+    _: Annotated[User, Depends(require_admin)],
+):
+    """Готовит обновление фотографии сотрудника и возвращает URL загрузки."""
+    try:
+        if employee_data.content_type not in ALLOWED_IMAGE_TYPES:
+            raise HTTPException(
+                status_code=400,
+                detail="Недопустимый тип файла",
+            )
+        employee = await get_employee_by_id(session, employee_id)
+        if employee is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Failed to update employee",
+            )
+
+        if employee.photo is None:
+            storage_key, presigned_url, public_url = build_employee_photo_payload(
+                photo_filename=employee_data.photo_filename,
+            )
+            employee, photo = await attach_employee_photo(
+                session,
+                employee,
+                storage_key,
+                public_url,
+                employee_data.content_type,
+            )
+        else:
+            photo = await update_employee_photo_data(session, employee, employee_data.content_type)
+            presigned_url = get_presigned_put_url(
+                settings.s3_bucket_name, employee.photo.storage_key
+            )
+
+        photo = MediaFileRead.model_validate(photo)
+        return EmployeePutResponse(
+            id=employee.id,
+            full_name=employee.full_name,
+            position=employee.position,
+            experience=employee.experience,
+            photo=photo,
+            presigned_url=presigned_url,
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        error_logger.exception("Failed to update employee photo", exc_info=exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update employee photo",
+        ) from exc
+
+
+@router.delete("/{employee_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_employee(
+    session: SessionDependency,
+    employee_id: uuid.UUID,
+) -> None:
+    """Удаляет сотрудника по идентификатору."""
+    deleted = await delete_employee_by_id(session, employee_id)
+
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Employee not found",
+        )
