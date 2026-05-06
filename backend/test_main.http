@@ -1,28 +1,212 @@
-# Test your FastAPI endpoints
+@baseUrl = http://127.0.0.1:8000
+@username = adirtka
+@password = adirtka_kettle
 
-POST http://127.0.0.1:8000/auth/login/
+###
+# Health check
+GET {{baseUrl}}/health
+Accept: application/json
+
+> {% 
+client.test("health returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("health payload contains ok status", function () {
+  client.assert(response.body.status === "ok", "Expected status=ok");
+});
+%}
+
+###
+# Login as admin and persist access token
+POST {{baseUrl}}/auth/login
 Accept: application/json
 Content-Type: application/json
 
 {
-  "username": "adirtka",
-  "password": "adirtka_kettle"
+  "username": "{{username}}",
+  "password": "{{password}}"
 }
 
+> {%
+client.test("login returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("login returns bearer access token", function () {
+  client.assert(!!response.body.access_token, "Expected access_token");
+  client.assert(response.body.token_type === "bearer", "Expected bearer token type");
+});
+client.global.set("access_token", response.body.access_token);
+%}
+
 ###
+# Read current employees list
+GET {{baseUrl}}/employee/
+Accept: application/json
 
-GET http://127.0.0.1:8000/employee/
+> {%
+client.test("employee list returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("employee list returns array", function () {
+  client.assert(Array.isArray(response.body), "Expected array response");
+});
+%}
 
 ###
-
-POST http://127.0.0.1:8000/employee/
+# Create employee without photo
+POST {{baseUrl}}/employee/
+Accept: application/json
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMWNjZjUwZC1mYTliLTQzNWEtOWIxZi0yY2ZlY2E4ZWM4Y2IiLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3OTg0NzM1LCJleHAiOjE3Nzc5ODgzMzV9.4PSYPIMnTFR3zoLpJ6P5-PMVel3Qp8n3bGYAAAukX9Y
+Authorization: Bearer {{access_token}}
 
 {
-  "full_name": "Maksim",
-  "position": "Idiot",
-  "experience": "21 years",
-  "photo_filename": "maksim.jpg",
+  "full_name": "Employee Without Photo",
+  "position": "QA Engineer",
+  "experience": "3 years"
+}
+
+> {%
+client.test("create employee without photo returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("employee without photo has null photo fields", function () {
+  client.assert(!!response.body.id, "Expected employee id");
+  client.assert(response.body.photo === null, "Expected null photo");
+  client.assert(response.body.presigned_url === null, "Expected null presigned_url");
+});
+client.global.set("employee_without_photo_id", response.body.id);
+%}
+
+###
+# Create employee with photo
+POST {{baseUrl}}/employee/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "full_name": "Employee With Photo",
+  "position": "Backend Engineer",
+  "experience": "5 years",
+  "photo_filename": "employee-with-photo.jpg",
   "content_type": "image/jpeg"
 }
+
+> {%
+client.test("create employee with photo returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("employee with photo returns upload metadata", function () {
+  client.assert(!!response.body.id, "Expected employee id");
+  client.assert(response.body.photo !== null, "Expected photo payload");
+  client.assert(!!response.body.photo.mime_type, "Expected photo mime_type");
+  client.assert(!!response.body.presigned_url, "Expected presigned_url");
+});
+client.global.set("employee_with_photo_id", response.body.id);
+%}
+
+###
+# Read employees list after creation
+GET {{baseUrl}}/employee/
+Accept: application/json
+
+> {%
+client.test("employee list after creation returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("employee list contains created employees", function () {
+  const ids = response.body.map((item) => item.id);
+  client.assert(ids.includes(client.global.get("employee_without_photo_id")), "Expected employee without photo in list");
+  client.assert(ids.includes(client.global.get("employee_with_photo_id")), "Expected employee with photo in list");
+});
+%}
+
+###
+# Patch employee fields
+PATCH {{baseUrl}}/employee/{{employee_without_photo_id}}
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "full_name": "Employee Without Photo Updated",
+  "position": "Senior QA Engineer",
+  "experience": "4 years"
+}
+
+> {%
+client.test("patch employee returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("patch employee returns updated fields", function () {
+  client.assert(response.body.full_name === "Employee Without Photo Updated", "Expected updated full_name");
+  client.assert(response.body.position === "Senior QA Engineer", "Expected updated position");
+});
+%}
+
+###
+# Attach photo later to employee created without photo
+PUT {{baseUrl}}/employee/{{employee_without_photo_id}}/photo
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "photo_filename": "employee-without-photo.webp",
+  "content_type": "image/webp"
+}
+
+> {%
+client.test("late photo upload returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("late photo upload returns photo and presigned url", function () {
+  client.assert(response.body.photo !== null, "Expected photo payload");
+  client.assert(response.body.photo.mime_type === "image/webp", "Expected updated mime type");
+  client.assert(!!response.body.presigned_url, "Expected presigned_url");
+});
+%}
+
+###
+# Update existing photo metadata/upload URL for employee with photo
+PUT {{baseUrl}}/employee/{{employee_with_photo_id}}/photo
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "photo_filename": "employee-with-photo.png",
+  "content_type": "image/png"
+}
+
+> {%
+client.test("photo update for existing photo returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("photo update returns png mime type", function () {
+  client.assert(response.body.photo !== null, "Expected photo payload");
+  client.assert(response.body.photo.mime_type === "image/png", "Expected image/png mime type");
+});
+%}
+
+###
+# Delete employee created with photo
+DELETE {{baseUrl}}/employee/{{employee_with_photo_id}}
+Authorization: Bearer {{access_token}}
+
+> {%
+client.test("delete employee with photo returns 204", function () {
+  client.assert(response.status === 204, "Expected status 204");
+});
+%}
+
+###
+# Delete employee created without photo
+DELETE {{baseUrl}}/employee/{{employee_without_photo_id}}
+Authorization: Bearer {{access_token}}
+
+> {%
+client.test("delete employee without photo returns 204", function () {
+  client.assert(response.status === 204, "Expected status 204");
+});
+%}
