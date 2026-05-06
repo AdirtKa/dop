@@ -4,8 +4,141 @@
     padding: 24px 0 48px;
 }
 
+.employees-page__header {
+    margin-bottom: 24px;
+}
+
+.employees-page__title {
+    margin: 0 0 8px;
+
+    color: var(--color-text);
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.employees-page__subtitle {
+    margin: 0;
+
+    color: var(--color-muted);
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.employees-page__create {
+    margin-bottom: 24px;
+    padding: 20px;
+
+    background-color: #f4f9ff;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+}
+
+.employees-page__section-title {
+    margin: 0 0 14px;
+
+    color: var(--color-text);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.employees-page__create-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 16px;
+}
+
+.employees-page__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    color: var(--color-muted);
+    font-size: 13px;
+}
+
+.employees-page__field input {
+    padding: 10px 12px;
+
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+
+    color: var(--color-text);
+    font-size: 15px;
+    background-color: #fff;
+}
+
+.employees-page__field input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.employees-page__submit {
+    width: fit-content;
+    padding: 10px 16px;
+
+    border: none;
+    border-radius: 8px;
+    background-color: var(--color-primary);
+
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.employees-page__submit:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.employees-page__submit:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.employees-page__error {
+    grid-column: 1 / -1;
+    margin: 0;
+
+    color: #b91c1c;
+    font-size: 13px;
+}
+
 .employees-page__list {
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
+
+.employees-page__empty {
+    margin: 0;
+    padding: 24px;
+
+    color: var(--color-muted);
+    font-size: 15px;
+    text-align: center;
+
+    background-color: var(--color-surface);
+    border: 1px dashed var(--color-border);
+    border-radius: 14px;
+}
+
+@media (max-width: 640px) {
+    .employees-page {
+        width: min(100% - 24px, 880px);
+        padding-top: 18px;
+    }
+
+    .employees-page__title {
+        font-size: 26px;
+    }
+
+    .employees-page__create-form {
+        grid-template-columns: 1fr;
+    }
+
+    .employees-page__submit {
+        width: 100%;
+    }
 }

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { NavLink } from "react-router";
 
+import { useAuth } from "~/shared/auth/auth-context";
 import "./navbar.css";
 
 const navItems = [
@@ -10,12 +11,53 @@ const navItems = [
 ];
 
 export function Navbar() {
+    const {
+        errorMessage,
+        isAdmin,
+        isAuthenticated,
+        loginWithPassword,
+        logoutUser,
+        status,
+        user,
+    } = useAuth();
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const closeMobileMenu = () => {
         setIsMobileMenuOpen(false);
     };
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            setIsLoginOpen(false);
+            setPassword("");
+        }
+    }, [isAuthenticated]);
+
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            await loginWithPassword({ username, password });
+            setPassword("");
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
+
+    async function handleLogout() {
+        setIsSubmitting(true);
+
+        try {
+            await logoutUser();
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
 
     return (
         <header className="navbar">
@@ -49,17 +91,36 @@ export function Navbar() {
                 </div>
 
                 <div className="navbar__login-wrapper">
-                    <button
-                        type="button"
-                        className="navbar__login-button"
-                        onClick={() => setIsLoginOpen((prev) => !prev)}
-                    >
-                        Есть аккаунт?
-                    </button>
+                    {status === "loading" ? (
+                        <span className="navbar__session-text">Проверка сессии...</span>
+                    ) : isAuthenticated && user ? (
+                        <div className="navbar__session">
+                            <div className="navbar__session-text">
+                                <strong>{user.username}</strong>
+                                <span>{isAdmin ? "Администратор" : user.role}</span>
+                            </div>
+                            <button
+                                type="button"
+                                className="navbar__login-button"
+                                onClick={handleLogout}
+                                disabled={isSubmitting}
+                            >
+                                Выйти
+                            </button>
+                        </div>
+                    ) : (
+                        <>
+                            <button
+                                type="button"
+                                className="navbar__login-button"
+                                onClick={() => setIsLoginOpen((prev) => !prev)}
+                            >
+                                Есть аккаунт?
+                            </button>
 
-                    {isLoginOpen && (
+                            {isLoginOpen && (
                         <div className="navbar__login-popup">
-                            <form className="navbar__login-form">
+                            <form className="navbar__login-form" onSubmit={handleSubmit}>
                                 <div className="navbar__field">
                                     <label className="navbar__label" htmlFor="username">
                                         Логин
@@ -68,7 +129,11 @@ export function Navbar() {
                                         id="username"
                                         name="username"
                                         type="text"
+                                        value={username}
+                                        onChange={(event) => setUsername(event.target.value)}
                                         className="navbar__input"
+                                        autoComplete="username"
+                                        required
                                     />
                                 </div>
 
@@ -80,15 +145,25 @@ export function Navbar() {
                                         id="password"
                                         name="password"
                                         type="password"
+                                        value={password}
+                                        onChange={(event) => setPassword(event.target.value)}
                                         className="navbar__input"
+                                        autoComplete="current-password"
+                                        required
                                     />
                                 </div>
 
-                                <button type="submit" className="navbar__submit">
+                                {errorMessage ? (
+                                    <p className="navbar__error">{errorMessage}</p>
+                                ) : null}
+
+                                <button type="submit" className="navbar__submit" disabled={isSubmitting}>
                                     Войти
                                 </button>
                             </form>
                         </div>
+                            )}
+                        </>
                     )}
                 </div>
             </nav>

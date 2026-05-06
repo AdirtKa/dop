@@ -1,8 +1,6 @@
-/* app/shared/ui/employee-card.css */
-
 .employee-card {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 24px;
 
@@ -13,10 +11,23 @@
     border-radius: 14px;
 }
 
+.employee-card--editing {
+    background-color: #fefefe;
+}
+
 .employee-card__info {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    flex: 1;
+    gap: 10px;
+}
+
+.employee-card__edit-form {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
 }
 
 .employee-card__name {
@@ -48,4 +59,160 @@
 
     object-fit: cover;
     border-radius: 12px;
+    border: 1px solid var(--color-border);
+}
+
+.employee-card__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    color: var(--color-muted);
+    font-size: 13px;
+}
+
+.employee-card__input {
+    padding: 10px 12px;
+
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+
+    color: var(--color-text);
+    font-size: 15px;
+}
+
+.employee-card__input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.employee-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.employee-card__button {
+    padding: 9px 14px;
+
+    border: none;
+    border-radius: 8px;
+    background-color: var(--color-primary);
+
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.employee-card__button:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.employee-card__button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.employee-card__button--ghost {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+.employee-card__button--ghost:hover {
+    background-color: #c9defe;
+}
+
+.employee-card__button--danger {
+    background-color: #dc2626;
+}
+
+.employee-card__button--danger:hover {
+    background-color: #b91c1c;
+}
+
+.employee-card__upload {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    color: var(--color-muted);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.employee-card__upload input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.employee-card__upload input[type="file"]:disabled {
+    cursor: wait;
+}
+
+.employee-card__upload-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.employee-card__upload-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 9px 14px;
+
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: #fff;
+
+    color: var(--color-primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.employee-card__upload:hover .employee-card__upload-button {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+}
+
+.employee-card__upload-name {
+    color: var(--color-text);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.employee-card__upload--inline {
+    margin-top: 2px;
+}
+
+.employee-card__error {
+    margin: 0;
+
+    color: #b91c1c;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+    .employee-card,
+    .employee-card__edit-form {
+        flex-direction: column-reverse;
+    }
+
+    .employee-card__photo {
+        width: 100%;
+        max-width: 240px;
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
 }

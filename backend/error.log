@@ -319,3 +319,41 @@ Traceback (most recent call last):
   File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
     raise exc.MissingGreenlet(
 sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+2026-05-06 11:25:36,874 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-06 11:25:37,073 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-06 11:25:37,074 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-06 11:26:08,717 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-06 11:26:25,393 | INFO | Login succeeded for user_id=2f015f3c-2a1f-408f-a39e-17d7311b54a4 username="adirtka" from client=127.0.0.1
+2026-05-06 11:29:23,140 | ERROR | Failed to update employee photo
+Traceback (most recent call last):
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/src/routes/employee.py", line 176, in update_employee_photo
+    storage_key, presigned_url, public_url = build_employee_photo_payload(
+                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        photo_filename=employee_data.photo_filename,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/src/routes/employee.py", line 51, in build_employee_photo_payload
+    presigned_url: str = get_presigned_put_url(settings.s3_bucket_name, storage_key)
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/src/services/media.py", line 16, in get_presigned_put_url
+    upload_url: str = minio_client.get_presigned_url(
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        bucket_name=bucket_name,
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        method="PUT",
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/.venv/lib/python3.13/site-packages/minio/api.py", line 2476, in get_presigned_url
+    region = self._get_region(bucket_name)
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/.venv/lib/python3.13/site-packages/minio/api.py", line 498, in _get_region
+    response = self._url_open(
+        "GET",
+    ...<2 lines>...
+        query_params={"location": ""},
+    )
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/.venv/lib/python3.13/site-packages/minio/api.py", line 427, in _url_open
+    raise response_error
+minio.error.S3Error: S3 operation failed; code: NoSuchBucket, message: The specified bucket does not exist, resource: /dop-media, request_id: 18ACD5BD94B7021C, host_id: dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8, bucket_name: dop-media

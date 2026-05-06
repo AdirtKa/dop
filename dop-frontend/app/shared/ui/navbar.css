@@ -47,6 +47,27 @@
     position: relative;
 }
 
+.navbar__session {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.navbar__session-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+
+    color: var(--color-muted);
+    font-size: 12px;
+}
+
+.navbar__session-text strong {
+    color: var(--color-text);
+    font-size: 13px;
+}
+
 .navbar__login-button {
     padding: 0;
 
@@ -65,6 +86,12 @@
 
 .navbar__login-button:hover {
     color: var(--color-primary-hover);
+}
+
+.navbar__login-button:disabled,
+.navbar__submit:disabled {
+    cursor: wait;
+    opacity: 0.7;
 }
 
 .navbar__login-popup {
@@ -135,6 +162,14 @@
     background-color: var(--color-primary-hover);
 }
 
+.navbar__error {
+    margin: 0;
+
+    color: #b91c1c;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
 .navbar__burger {
     display: none;
     width: 34px;
@@ -178,6 +213,10 @@
     .navbar__login-popup {
         right: 0;
         width: 220px;
+    }
+
+    .navbar__session {
+        gap: 8px;
     }
 
     .navbar__mobile-menu {

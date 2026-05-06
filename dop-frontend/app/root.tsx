@@ -9,6 +9,7 @@ import {
 
 import type {Route} from "./+types/root";
 import "./app.css";
+import { AuthProvider } from "~/shared/auth/auth-context";
 import {Navbar} from "~/shared/ui/navbar";
 
 export const links: Route.LinksFunction = () => [
@@ -34,13 +35,14 @@ export function Layout({children}: { children: React.ReactNode }) {
             <Links/>
         </head>
         <body>
-        <Navbar/>
+        <AuthProvider>
+            <Navbar/>
             <main>
-
                 {children}
             </main>
-        <ScrollRestoration/>
-        <Scripts/>
+            <ScrollRestoration/>
+            <Scripts/>
+        </AuthProvider>
         </body>
         </html>
     );
