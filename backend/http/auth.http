@@ -1,0 +1,25 @@
+@baseUrl = http://127.0.0.1:8000
+@username = adirtka
+@password = adirtka_kettle
+
+###
+# Login as admin and persist access token
+POST {{baseUrl}}/auth/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+> {%
+client.test("login returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("login returns bearer access token", function () {
+  client.assert(!!response.body.access_token, "Expected access_token");
+  client.assert(response.body.token_type === "bearer", "Expected bearer token type");
+});
+client.global.set("access_token", response.body.access_token);
+%}

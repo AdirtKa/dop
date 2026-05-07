@@ -1,0 +1,15 @@
+@baseUrl = http://127.0.0.1:8000
+
+###
+# Health check
+GET {{baseUrl}}/health
+Accept: application/json
+
+> {%
+client.test("health returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("health payload contains ok status", function () {
+  client.assert(response.body.status === "ok", "Expected status=ok");
+});
+%}

@@ -1,0 +1,149 @@
+@baseUrl = http://127.0.0.1:8000
+@username = adirtka
+@password = adirtka_kettle
+
+###
+# Login as admin and persist access token
+POST {{baseUrl}}/auth/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+> {%
+client.test("login returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.global.set("access_token", response.body.access_token);
+%}
+
+###
+# Read events list
+GET {{baseUrl}}/event/
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+> {%
+client.test("event list returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("event list returns array", function () {
+  client.assert(Array.isArray(response.body), "Expected array response");
+});
+%}
+
+###
+# Create public event without media
+POST {{baseUrl}}/event/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "name": "Public Event Without Media",
+  "start_time": "2026-05-10T10:00:00Z",
+  "end_time": "2026-05-10T12:00:00Z",
+  "is_public": true,
+  "organization_id": null,
+  "media": []
+}
+
+> {%
+client.test("create public event without media returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("created public event has empty media and upload urls", function () {
+  client.assert(!!response.body.id, "Expected event id");
+  client.assert(response.body.name === "Public Event Without Media", "Expected event name");
+  client.assert(response.body.is_public === true, "Expected public event");
+  client.assert(Array.isArray(response.body.media), "Expected media array");
+  client.assert(response.body.media.length === 0, "Expected empty media array");
+  client.assert(Array.isArray(response.body.upload_urls), "Expected upload_urls array");
+  client.assert(response.body.upload_urls.length === 0, "Expected empty upload_urls array");
+});
+client.global.set("public_event_without_media_id", response.body.id);
+%}
+
+###
+# Create event with pending media upload
+POST {{baseUrl}}/event/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "name": "Public Event With Media",
+  "start_time": "2026-05-12T10:00:00Z",
+  "end_time": "2026-05-12T12:00:00Z",
+  "is_public": true,
+  "organization_id": null,
+  "media": [
+    {
+      "filename": "test.jpg",
+      "content_type": "image/jpeg"
+    }
+  ]
+}
+
+> {%
+client.test("create event with media returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("created event either returns upload metadata or upload error", function () {
+  client.assert(!!response.body.id, "Expected event id");
+  client.assert(Array.isArray(response.body.upload_urls), "Expected upload_urls array");
+  client.assert(Array.isArray(response.body.upload_errors), "Expected upload_errors array");
+  client.assert(response.body.upload_urls.length + response.body.upload_errors.length === 1, "Expected one upload result");
+
+  if (response.body.upload_urls.length === 1) {
+    client.assert(response.body.upload_urls[0].media_file.status === "pending", "Expected pending media");
+    client.assert(response.body.upload_urls[0].media_file.public_url === null, "Expected no public URL before completion");
+    client.global.set("public_event_with_media_id", response.body.id);
+    client.global.set("public_event_media_id", response.body.upload_urls[0].media_file.id);
+  }
+});
+%}
+
+###
+# Patch event
+PATCH {{baseUrl}}/event/{{public_event_without_media_id}}
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "name": "Updated Public Event",
+  "start_time": "2026-05-11T10:00:00Z",
+  "end_time": "2026-05-11T12:00:00Z",
+  "organization_id": null
+}
+
+> {%
+client.test("patch event returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+
+client.test("patched event has updated fields", function () {
+  client.assert(!!response.body.id, "Expected event id");
+  client.assert(response.body.id === client.global.get("public_event_without_media_id"), "Expected same event id");
+
+  client.assert(response.body.name === "Updated Public Event", "Expected updated event name");
+  client.assert(response.body.start_time === "2026-05-11T10:00:00Z", "Expected updated start_time");
+  client.assert(response.body.end_time === "2026-05-11T12:00:00Z", "Expected updated end_time");
+});
+
+client.test("patched event contains expected response fields", function () {
+  client.assert(Array.isArray(response.body.media), "Expected media array");
+
+  if ("upload_urls" in response.body) {
+    client.assert(Array.isArray(response.body.upload_urls), "Expected upload_urls array");
+  }
+
+  if ("upload_errors" in response.body) {
+    client.assert(Array.isArray(response.body.upload_errors), "Expected upload_errors array");
+  }
+});
+%}

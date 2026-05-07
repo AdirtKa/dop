@@ -1,0 +1,39 @@
+@baseUrl = http://127.0.0.1:8000
+@username = adirtka
+@password = adirtka_kettle
+@eventId = replace-with-event-id
+@mediaId = replace-with-media-id
+
+###
+# Login as admin and persist access token
+POST {{baseUrl}}/auth/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+> {%
+client.test("login returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.global.set("access_token", response.body.access_token);
+%}
+
+###
+# Complete event media upload after uploading file to presigned URL
+POST {{baseUrl}}/event/{{eventId}}/media/{{mediaId}}/complete
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+> {%
+client.test("complete event media upload returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("completed event media is ready and public", function () {
+  client.assert(response.body.status === "ready", "Expected ready media");
+  client.assert(!!response.body.public_url, "Expected public URL after completion");
+});
+%}
