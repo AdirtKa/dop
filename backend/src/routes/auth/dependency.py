@@ -1,5 +1,6 @@
 """Зависимости аутентификации и проверки ролей."""
 
+from typing import Annotated
 import uuid
 
 from fastapi import Depends, HTTPException
@@ -16,12 +17,18 @@ from src.session import get_session
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=settings.auth_token_url)
 
+optional_oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl=settings.auth_token_url,
+    auto_error=False,
+)
+
 
 async def get_current_user(
-    token: str = Depends(oauth2_scheme),
-    session: AsyncSession = Depends(get_session),
+    token: Annotated[str, Depends(oauth2_scheme)],
+    session: Annotated[AsyncSession, Depends(get_session)],
 ) -> User:
     """Возвращает текущего пользователя по access-token."""
+
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -32,7 +39,7 @@ async def get_current_user(
         payload = decode_access_token(token)
 
         if payload.get("type") != "access":
-            raise credentials_exception from None
+            raise credentials_exception
 
         user_id = uuid.UUID(payload["sub"])
 
@@ -42,7 +49,35 @@ async def get_current_user(
     user = await session.get(User, user_id)
 
     if user is None or not user.is_active:
-        raise credentials_exception from None
+        raise credentials_exception
+
+    return user
+
+
+async def get_optional_current_user(
+    token: Annotated[str | None, Depends(optional_oauth2_scheme)],
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> User | None:
+    """Возвращает текущего пользователя или None, если пользователь не авторизован."""
+
+    if token is None:
+        return None
+
+    try:
+        payload = decode_access_token(token)
+
+        if payload.get("type") != "access":
+            return None
+
+        user_id = uuid.UUID(payload["sub"])
+
+    except (jwt.InvalidTokenError, ValueError, KeyError):
+        return None
+
+    user = await session.get(User, user_id)
+
+    if user is None or not user.is_active:
+        return None
 
     return user
 

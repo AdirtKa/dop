@@ -2,14 +2,15 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 import uuid
 
-from sqlalchemy import DateTime, ForeignKey, Text, func
+from sqlalchemy import Boolean, DateTime, ForeignKey, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
 
 if TYPE_CHECKING:
-    from src.models import MediaFile
+    from src.models.media_file import MediaFile
+    from src.models.user import User
 
 
 class Event(Base):
@@ -19,13 +20,20 @@ class Event(Base):
 
     name: Mapped[str] = mapped_column(Text, nullable=False)
 
-    start_time: Mapped[datetime] = mapped_column(DateTime, nullable=False)
-    end_time: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    start_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    end_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+    is_public: Mapped[bool] = mapped_column(Boolean, nullable=False)
 
     organization_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="SET NULL"),
         nullable=True,
+    )
+
+    organization: Mapped["User | None"] = relationship(
+        "User",
+        foreign_keys=[organization_id],
     )
 
     media: Mapped[list["MediaFile"]] = relationship(

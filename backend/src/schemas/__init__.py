@@ -7,6 +7,13 @@ from .employee import (
     EmployeePutResponse,
     EmployeeRead,
 )
+from .event import (
+    EventCreateRequest,
+    EventMediaCreateRequest,
+    EventMediaUploadResponse,
+    EventPutResponse,
+    ReadEventResponse,
+)
 from .mediafile import MediaFileRead
 from .token import TokenData
 from .user import User, UserInDB
@@ -17,7 +24,12 @@ __all__: list[str] = [
     "EmployeePhotoUpdateRequest",
     "EmployeePutResponse",
     "EmployeeRead",
+    "EventCreateRequest",
+    "EventMediaCreateRequest",
+    "EventMediaUploadResponse",
+    "EventPutResponse",
     "MediaFileRead",
+    "ReadEventResponse",
     "TokenData",
     "User",
     "UserInDB",

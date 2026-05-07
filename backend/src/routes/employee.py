@@ -4,7 +4,6 @@ from typing import Annotated
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
 from src.logger import get_error_logger
@@ -18,6 +17,7 @@ from src.repository.employee import (
     update_employee_photo_data,
 )
 from src.repository.media import attach_employee_photo
+from src.routes.auth.auth import session_dependency
 from src.routes.auth.dependency import require_admin
 from src.schemas import MediaFileRead
 from src.schemas.employee import (
@@ -27,11 +27,9 @@ from src.schemas.employee import (
     EmployeePutResponse,
     EmployeeRead,
 )
-from src.services.media import get_presigned_put_url
-from src.session import get_session
+from src.services.media import build_media_payload, get_presigned_put_url
 
 router = APIRouter()
-SessionDependency = Annotated[AsyncSession, Depends(get_session)]
 error_logger = get_error_logger()
 
 ALLOWED_IMAGE_TYPES = {
@@ -40,21 +38,11 @@ ALLOWED_IMAGE_TYPES = {
     "image/webp",
 }
 
-
-def build_employee_photo_payload(
-    *,
-    photo_filename: str,
-) -> tuple[str, str, str]:
-    """Генерирует ключ хранения и URL-адреса для загрузки фото сотрудника."""
-    ext: str = photo_filename.rsplit(".", maxsplit=1)[-1]
-    storage_key: str = f"employees/{uuid.uuid4()}.{ext}"
-    presigned_url: str = get_presigned_put_url(settings.s3_bucket_name, storage_key)
-    public_url: str = f"{settings.s3_public_url}/{storage_key}"
-    return storage_key, presigned_url, public_url
+STORAGE_PREFIX: str = "employees"
 
 
 @router.get("/", response_model=list[EmployeeRead])
-async def read_employees(session: SessionDependency):
+async def read_employees(session: session_dependency):
     """Возвращает список сотрудников для клиентского каталога."""
     try:
         employees = await get_employees(session)
@@ -71,7 +59,7 @@ async def read_employees(session: SessionDependency):
 
 @router.post("/", response_model=EmployeePutResponse)
 async def create_employee(
-    session: SessionDependency,
+    session: session_dependency,
     employee_data: EmployeeCreateRequest,
     _: Annotated[User, Depends(require_admin)],
 ):
@@ -92,8 +80,9 @@ async def create_employee(
         presigned_url: str | None = None
 
         if employee_data.photo_filename is not None and employee_data.content_type is not None:
-            storage_key, presigned_url, public_url = build_employee_photo_payload(
-                photo_filename=employee_data.photo_filename,
+            storage_key, presigned_url, public_url = build_media_payload(
+                filename=employee_data.photo_filename,
+                storage_prefix=STORAGE_PREFIX,
             )
             employee, attached_photo = await attach_employee_photo(
                 session,
@@ -126,7 +115,7 @@ async def create_employee(
 
 @router.patch("/{employee_id}", response_model=EmployeeRead)
 async def update_employee(
-    session: SessionDependency,
+    session: session_dependency,
     employee_id: uuid.UUID,
     employee_data: EmployeePatchRequest,
     _: Annotated[User, Depends(require_admin)],
@@ -153,7 +142,7 @@ async def update_employee(
 
 @router.put("/{employee_id}/photo", response_model=EmployeePutResponse)
 async def update_employee_photo(
-    session: SessionDependency,
+    session: session_dependency,
     employee_id: uuid.UUID,
     employee_data: EmployeePhotoUpdateRequest,
     _: Annotated[User, Depends(require_admin)],
@@ -173,8 +162,9 @@ async def update_employee_photo(
             )
 
         if employee.photo is None:
-            storage_key, presigned_url, public_url = build_employee_photo_payload(
-                photo_filename=employee_data.photo_filename,
+            storage_key, presigned_url, public_url = build_media_payload(
+                filename=employee_data.photo_filename,
+                storage_prefix=STORAGE_PREFIX,
             )
             employee, photo = await attach_employee_photo(
                 session,
@@ -210,7 +200,7 @@ async def update_employee_photo(
 
 @router.delete("/{employee_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_employee(
-    session: SessionDependency,
+    session: session_dependency,
     employee_id: uuid.UUID,
 ) -> None:
     """Удаляет сотрудника по идентификатору."""

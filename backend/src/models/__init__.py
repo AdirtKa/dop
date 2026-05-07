@@ -9,6 +9,7 @@ from .user import User, UserRole
 
 __all__ = [
     "Employee",
+    "Event",
     "MediaFile",
     "MediaKind",
     "RefreshSession",

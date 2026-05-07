@@ -9,7 +9,7 @@ import uvicorn
 
 from src.config import settings
 from src.logger import get_access_logger, get_error_logger, get_request_client, setup_logging
-from src.routes import auth_router, employee_router, root_router
+from src.routes import auth_router, employee_router, event_router, root_router
 
 setup_logging()
 access_logger = get_access_logger()
@@ -29,6 +29,12 @@ app.include_router(
     employee_router,
     prefix=f"{settings.normalized_api_prefix}/employee",
     tags=["employee"],
+)
+
+app.include_router(
+    event_router,
+    prefix=f"{settings.normalized_api_prefix}/event",
+    tags=["event"],
 )
 app.include_router(auth_router, prefix=f"{settings.normalized_api_prefix}/auth", tags=["auth"])
 app.include_router(root_router, prefix="")
