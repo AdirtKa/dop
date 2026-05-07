@@ -9,7 +9,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.models.base import Base
 
 if TYPE_CHECKING:
-    from src.models import MediaFile, event_media
+    from src.models import MediaFile
 
 
 class Event(Base):
@@ -24,13 +24,12 @@ class Event(Base):
 
     organization_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("users.id"),
+        ForeignKey("users.id", ondelete="SET NULL"),
         nullable=True,
-        ondelete="SET NULL",
     )
 
-    media: Mapped[list[MediaFile]] = relationship(
-        secondary=event_media,
+    media: Mapped[list["MediaFile"]] = relationship(
+        secondary="event_media",
     )
 
     created_at: Mapped[datetime] = mapped_column(

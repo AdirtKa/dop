@@ -7,6 +7,7 @@ from sqlalchemy import engine_from_config, pool
 
 from src.config import settings
 from src.models.base import Base
+from src.models import Employee, MediaFile, MediaKind, RefreshSession, User, UserRole, event_media, Event
 
 config = context.config
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
