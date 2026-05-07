@@ -79,3 +79,7 @@ class EventPatchRequest(BaseModel):
     start_time: datetime
     end_time: datetime
     organization_id: uuid.UUID | None
+
+
+class EventVisibilityPatchRequest(BaseModel):
+    is_public: bool

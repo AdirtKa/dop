@@ -95,3 +95,22 @@ async def patch_event(
     stmt = select(Event).where(Event.id == event_id).options(selectinload(Event.media))
     result = await session.execute(stmt)
     return result.scalar_one_or_none()
+
+
+async def change_visibility(session: AsyncSession, event_id: uuid.UUID, is_public: bool) -> bool:
+    event = await session.get(Event, event_id)
+    if event is None:
+        return False
+
+    event.is_public = is_public
+    await session.commit()
+    await session.refresh(event)
+    return True
+
+
+async def get_event_owner(session: AsyncSession, event_id: uuid.UUID) -> UUID | None:
+    event = await session.get(Event, event_id)
+    if event is None:
+        return None
+
+    return event.organization_id

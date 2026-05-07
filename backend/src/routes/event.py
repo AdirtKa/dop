@@ -5,7 +5,13 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from src.logger import get_error_logger
 from src.models import Event, User, UserRole
-from src.repository.event import add_event, get_events, patch_event
+from src.repository.event import (
+    add_event,
+    change_visibility,
+    get_event_owner,
+    get_events,
+    patch_event,
+)
 from src.repository.media import attach_event_media
 from src.routes.auth.auth import session_dependency
 from src.routes.auth.dependency import get_current_user, get_optional_current_user
@@ -16,7 +22,12 @@ from src.schemas import (
     MediaFileRead,
     ReadEventResponse,
 )
-from src.schemas.event import EventMediaUploadError, EventPatchRequest, OrganizationShortRead
+from src.schemas.event import (
+    EventMediaUploadError,
+    EventPatchRequest,
+    EventVisibilityPatchRequest,
+    OrganizationShortRead,
+)
 from src.services.media import build_media_payload, get_media_kind_by_content_type
 
 router: APIRouter = APIRouter()
@@ -178,6 +189,11 @@ async def update_event(
 ):
     try:
         if current_user.role == UserRole.ORGANIZATION:
+            if current_user.id != get_event_owner(session, event_id):
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="You do not have permission to update this event",
+                )
             data = event_data.model_copy(update={"organization_id": current_user.id})
         else:
             data = event_data.model_copy()
@@ -196,4 +212,42 @@ async def update_event(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to update event",
+        ) from exc
+
+
+@router.patch("/{event_id}/visibility")
+async def update_event_visibility(
+    session: session_dependency,
+    event_id: uuid.UUID,
+    event_data: EventVisibilityPatchRequest,
+    current_user: Annotated[User, Depends(get_current_user)],
+):
+    try:
+        if current_user.role == UserRole.ORGANIZATION and current_user.id != get_event_owner(
+            session, event_id
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have permission to update this event",
+            )
+
+        result: bool = await change_visibility(session, event_id, event_data.is_public)
+        if result:
+            return {
+                "status_code": status.HTTP_200_OK,
+                "detail": "Visibility updated",
+            }
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Failed to update visibility",
+        )
+
+    except HTTPException:
+        raise
+    except Exception as exc:
+        error_logger.exception("Failed to update event visibility", exc_info=exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update event visibility",
         ) from exc
