@@ -18,6 +18,12 @@ class MediaKind(enum.StrEnum):
     video = "video"
 
 
+class MediaStatus(enum.StrEnum):
+    pending = "pending"
+    ready = "ready"
+    failed = "failed"
+
+
 class MediaFile(Base):
     """ORM-модель файла, хранящегося во внешнем файловом хранилище."""
 
@@ -48,6 +54,13 @@ class MediaFile(Base):
     kind: Mapped[MediaKind] = mapped_column(
         Enum(MediaKind, name="media_kind"),
         nullable=False,
+    )
+
+    status: Mapped[MediaStatus] = mapped_column(
+        Enum(MediaStatus, name="media_status"),
+        nullable=False,
+        default=MediaStatus.ready,
+        server_default=MediaStatus.ready.value,
     )
 
     created_at: Mapped[datetime] = mapped_column(

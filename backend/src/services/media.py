@@ -2,6 +2,7 @@ from datetime import timedelta
 import uuid
 
 from minio import Minio
+from minio.error import S3Error
 
 from src.config import settings
 from src.models import MediaKind
@@ -48,3 +49,28 @@ def get_presigned_put_url(bucket_name, object_name) -> str:
         method="PUT",
     )
     return upload_url
+
+
+def validate_uploaded_media_object(
+    *,
+    storage_key: str,
+    expected_content_type: str,
+    allowed_content_types: set[str],
+    max_size_bytes: int,
+) -> None:
+    try:
+        stat = minio_client.stat_object(settings.s3_bucket_name, storage_key)
+    except S3Error as exc:
+        raise ValueError("Uploaded media object not found") from exc
+
+    if stat.size is None or stat.size <= 0:
+        raise ValueError("Uploaded media object is empty")
+
+    if stat.size > max_size_bytes:
+        raise ValueError("Uploaded media object is too large")
+
+    if stat.content_type != expected_content_type:
+        raise ValueError("Uploaded media content type does not match request")
+
+    if stat.content_type not in allowed_content_types:
+        raise ValueError("Uploaded media content type is not allowed")

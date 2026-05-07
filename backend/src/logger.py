@@ -8,7 +8,7 @@ from pathlib import Path
 
 from fastapi import Request
 
-LOG_DIR = Path(__file__).resolve().parent.parent
+LOG_DIR = Path(__file__).resolve().parent.parent / "logs"
 ACCESS_LOG_PATH = LOG_DIR / "access.log"
 ERROR_LOG_PATH = LOG_DIR / "error.log"
 

@@ -1,15 +1,16 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models import Employee, Event, MediaFile
-from src.models.media_file import MediaKind
+from src.models.media_file import MediaKind, MediaStatus
 
 
 async def create_media_file(
     session: AsyncSession,
     storage_key: str,
-    public_url: str,
+    public_url: str | None,
     mime_type: str,
     media_kind: MediaKind,
+    status: MediaStatus = MediaStatus.ready,
 ) -> MediaFile:
     """Создаёт MediaFile и делает flush, но не commit."""
 
@@ -18,6 +19,7 @@ async def create_media_file(
         public_url=public_url,
         mime_type=mime_type,
         kind=media_kind,
+        status=status,
     )
 
     session.add(media_file)
@@ -56,9 +58,10 @@ async def attach_event_media(
     session: AsyncSession,
     event: Event,
     storage_key: str,
-    public_url: str,
+    public_url: str | None,
     mime_type: str,
     media_kind: MediaKind,
+    status: MediaStatus = MediaStatus.pending,
 ) -> tuple[Event, MediaFile]:
     """Создаёт медиафайл и привязывает его к мероприятию."""
 
@@ -68,6 +71,7 @@ async def attach_event_media(
         public_url=public_url,
         mime_type=mime_type,
         media_kind=media_kind,
+        status=status,
     )
 
     await session.refresh(event, attribute_names=["media"])

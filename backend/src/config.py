@@ -76,6 +76,11 @@ class Settings(BaseSettings):
         alias="S3_PUBLIC_URL",
     )
 
+    max_event_media_size_bytes: int = Field(
+        default=50 * 1024 * 1024,
+        alias="MAX_EVENT_MEDIA_SIZE_BYTES",
+    )
+
     @property
     def is_dev(self) -> bool:
         """Проверяет, запущено ли приложение в режиме разработки."""

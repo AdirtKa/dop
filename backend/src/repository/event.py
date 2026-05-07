@@ -6,7 +6,8 @@ from sqlalchemy import and_, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from src.models import Event
+from src.config import settings
+from src.models import Event, MediaFile, MediaStatus, event_media
 from src.schemas import EventCreateRequest, EventPatchRequest
 
 
@@ -92,7 +93,12 @@ async def patch_event(
 
     await session.commit()
 
-    stmt = select(Event).where(Event.id == event_id).options(selectinload(Event.media))
+    stmt = (
+        select(Event)
+        .where(Event.id == event_id)
+        .options(selectinload(Event.media))
+        .options(selectinload(Event.organization))
+    )
     result = await session.execute(stmt)
     return result.scalar_one_or_none()
 
@@ -114,3 +120,35 @@ async def get_event_owner(session: AsyncSession, event_id: uuid.UUID) -> UUID | 
         return None
 
     return event.organization_id
+
+
+async def get_event_media(
+    session: AsyncSession,
+    event_id: uuid.UUID,
+    media_id: uuid.UUID,
+) -> MediaFile | None:
+    stmt = (
+        select(MediaFile)
+        .join(event_media, event_media.c.media_file_id == MediaFile.id)
+        .where(
+            event_media.c.event_id == event_id,
+            MediaFile.id == media_id,
+        )
+    )
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()
+
+
+async def mark_event_media_ready(session: AsyncSession, media: MediaFile) -> MediaFile:
+    media.status = MediaStatus.ready
+    media.public_url = f"{settings.s3_public_url}/{media.storage_key}"
+
+    await session.commit()
+    await session.refresh(media)
+
+    return media
+
+
+async def mark_event_media_failed(session: AsyncSession, media: MediaFile) -> None:
+    media.status = MediaStatus.failed
+    await session.commit()
