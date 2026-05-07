@@ -1,0 +1,923 @@
+2026-05-04 11:04:01,098 | INFO | Login succeeded for user_id=694fb616-9db6-4c24-ba82-1058ce913000 username="alice" from client=198.51.100.77
+2026-05-04 11:04:01,103 | WARNING | Login failed for username="ghost" from client=203.0.113.10: invalid credentials
+2026-05-04 11:04:01,104 | WARNING | Login blocked for user_id=a6dc6a2a-4551-4d0e-8c05-ff9849b77e50 username="bob" from client=203.0.113.10: inactive user
+2026-05-04 11:04:01,107 | INFO | Refresh succeeded for user_id=d05a5f38-c9ac-4fff-8271-a63ccf63e939 from client=198.51.100.88
+2026-05-04 11:04:01,108 | WARNING | Refresh rejected from client=203.0.113.10: Missing refresh token
+2026-05-04 11:04:01,110 | WARNING | Refresh rejected from client=203.0.113.10: Invalid refresh token
+Traceback (most recent call last):
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/src/services/auth.py", line 156, in refresh_tokens
+    payload = decode_refresh_token(refresh_token)
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/tests/test_auth_service.py", line 254, in raise_invalid
+    raise jwt.InvalidTokenError("invalid")
+jwt.exceptions.InvalidTokenError: invalid
+2026-05-04 11:04:01,113 | WARNING | Refresh rejected from client=203.0.113.10: Invalid token type
+2026-05-04 11:04:01,116 | WARNING | Refresh rejected from client=203.0.113.10: Refresh token was already used or revoked jti=782e2bd1-3c60-44de-90b7-d8aaab5f2262
+2026-05-04 11:04:01,118 | WARNING | Refresh rejected from client=203.0.113.10: Refresh session expired jti=0300eae8-b727-468e-870c-66afbb74f708
+2026-05-04 11:04:01,120 | WARNING | Refresh rejected from client=203.0.113.10: Refresh token hash mismatch jti=0562957d-3007-47c5-9467-884ccd65fd6f
+2026-05-04 11:04:01,123 | WARNING | Refresh rejected from client=203.0.113.10: User is inactive user_id=09f85e8c-076a-4393-8a9e-55494aa040bf
+2026-05-04 11:04:01,125 | INFO | Logout succeeded for user_id=c2e7834d-7854-4287-905a-0b19774ee128 from client=203.0.113.10
+2026-05-04 11:04:01,127 | WARNING | Logout cleanup failed for client=203.0.113.10
+Traceback (most recent call last):
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/src/services/auth.py", line 273, in logout_user
+    payload = decode_refresh_token(refresh_token)
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/tests/test_auth_service.py", line 488, in raise_invalid
+    raise jwt.InvalidTokenError("bad token")
+jwt.exceptions.InvalidTokenError: bad token
+2026-05-04 11:04:33,931 | INFO | Login succeeded for user_id=b6f55fd8-9380-48f3-815d-40016730d7a5 username="alice" from client=198.51.100.77
+2026-05-04 11:04:33,933 | WARNING | Login failed for username="ghost" from client=203.0.113.10: invalid credentials
+2026-05-04 11:04:33,935 | WARNING | Login blocked for user_id=0f74efaa-7347-4bf3-bb25-4e488205f7d7 username="bob" from client=203.0.113.10: inactive user
+2026-05-04 11:04:33,937 | INFO | Refresh succeeded for user_id=897caff3-dc53-4018-864e-4fc7be980043 from client=198.51.100.88
+2026-05-04 11:04:33,939 | WARNING | Refresh rejected from client=203.0.113.10: Missing refresh token
+2026-05-04 11:04:33,942 | WARNING | Refresh rejected from client=203.0.113.10: Invalid refresh token
+Traceback (most recent call last):
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/src/services/auth.py", line 156, in refresh_tokens
+    payload = decode_refresh_token(refresh_token)
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/tests/test_auth_service.py", line 254, in raise_invalid
+    raise jwt.InvalidTokenError("invalid")
+jwt.exceptions.InvalidTokenError: invalid
+2026-05-04 11:04:33,945 | WARNING | Refresh rejected from client=203.0.113.10: Invalid token type
+2026-05-04 11:04:33,948 | WARNING | Refresh rejected from client=203.0.113.10: Refresh token was already used or revoked jti=68b92343-f5bb-4507-93d7-134f7be8400b
+2026-05-04 11:04:33,950 | WARNING | Refresh rejected from client=203.0.113.10: Refresh session expired jti=2fabfa4f-27d5-4020-bfbf-065d8699421b
+2026-05-04 11:04:33,952 | WARNING | Refresh rejected from client=203.0.113.10: Refresh token hash mismatch jti=336426c5-2695-4b95-b1b1-a8bebfef13d4
+2026-05-04 11:04:33,954 | WARNING | Refresh rejected from client=203.0.113.10: User is inactive user_id=25b94a9f-08c8-4bc5-a6d2-f1b1a8610a14
+2026-05-04 11:04:33,956 | INFO | Logout succeeded for user_id=5af5fc20-0f7c-4048-b39b-92cc9d7e990b from client=203.0.113.10
+2026-05-04 11:04:33,958 | WARNING | Logout cleanup failed for client=203.0.113.10
+Traceback (most recent call last):
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/src/services/auth.py", line 273, in logout_user
+    payload = decode_refresh_token(refresh_token)
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/tests/test_auth_service.py", line 488, in raise_invalid
+    raise jwt.InvalidTokenError("bad token")
+jwt.exceptions.InvalidTokenError: bad token
+2026-05-04 11:05:12,900 | INFO | Login succeeded for user_id=1649c697-6664-487c-abb4-cb115c772fb3 username="alice" from client=198.51.100.77
+2026-05-04 11:05:12,902 | WARNING | Login failed for username="ghost" from client=203.0.113.10: invalid credentials
+2026-05-04 11:05:12,904 | WARNING | Login blocked for user_id=9e0eeca7-6969-4a60-af42-5485bbe88127 username="bob" from client=203.0.113.10: inactive user
+2026-05-04 11:05:12,906 | INFO | Refresh succeeded for user_id=4a0a91fe-5b1e-4338-94f0-90ca32fb7ccf from client=198.51.100.88
+2026-05-04 11:05:12,907 | WARNING | Refresh rejected from client=203.0.113.10: Missing refresh token
+2026-05-04 11:05:12,909 | WARNING | Refresh rejected from client=203.0.113.10: Invalid refresh token
+Traceback (most recent call last):
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/src/services/auth.py", line 156, in refresh_tokens
+    payload = decode_refresh_token(refresh_token)
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/tests/test_auth_service.py", line 254, in raise_invalid
+    raise jwt.InvalidTokenError("invalid")
+jwt.exceptions.InvalidTokenError: invalid
+2026-05-04 11:05:12,912 | WARNING | Refresh rejected from client=203.0.113.10: Invalid token type
+2026-05-04 11:05:12,914 | WARNING | Refresh rejected from client=203.0.113.10: Refresh token was already used or revoked jti=6348dabb-5259-4cb8-b83a-4c18c5e28ae3
+2026-05-04 11:05:12,915 | WARNING | Refresh rejected from client=203.0.113.10: Refresh session expired jti=998d2241-d7de-44fa-b82f-a71d8a3668cc
+2026-05-04 11:05:12,917 | WARNING | Refresh rejected from client=203.0.113.10: Refresh token hash mismatch jti=cf608cf3-77ce-4e95-95fc-0b327fabc938
+2026-05-04 11:05:12,920 | WARNING | Refresh rejected from client=203.0.113.10: User is inactive user_id=88501496-d2b8-43b5-9562-9e83dec31b0f
+2026-05-04 11:05:12,922 | INFO | Logout succeeded for user_id=1a181922-4334-4af4-ac7d-a78220a05366 from client=203.0.113.10
+2026-05-04 11:05:12,924 | WARNING | Logout cleanup failed for client=203.0.113.10
+Traceback (most recent call last):
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/src/services/auth.py", line 273, in logout_user
+    payload = decode_refresh_token(refresh_token)
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/tests/test_auth_service.py", line 488, in raise_invalid
+    raise jwt.InvalidTokenError("bad token")
+jwt.exceptions.InvalidTokenError: bad token
+2026-05-05 22:26:28,546 | ERROR | Unhandled error during POST "/auth/login" from client=127.0.0.1
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2531, in get_property
+    return self._props[key]
+           ~~~~~~~~~~~^^^^^
+KeyError: 'employees'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\danle\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\main.py", line 44, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\routes\auth\auth.py", line 25, in login
+    return await login_user(
+           ^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\services\auth.py", line 84, in login_user
+    user = await authenticate_user(session, username, password)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\services\auth.py", line 65, in authenticate_user
+    user = await get_user_by_username(session, username)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\repository\auth.py", line 17, in get_user_by_username
+    result = await session.execute(select(User).where(User.username == username))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1633, in _execute_clauseelement
+    compiled_sql, extracted_params, cache_hit = elem._compile_w_cache(
+                                                ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 716, in _compile_w_cache
+    compiled_sql = self._compiler(
+                   ^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 324, in _compiler
+    return dialect.statement_compiler(dialect, self, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\compiler.py", line 1461, in __init__
+    Compiled.__init__(self, dialect, statement, **kwargs)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\compiler.py", line 901, in __init__
+    self.string = self.process(self.statement, **compile_kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\compiler.py", line 947, in process
+    return obj._compiler_dispatch(self, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\visitors.py", line 138, in _compiler_dispatch
+    return meth(self, **kw)  # type: ignore  # noqa: E501
+           ^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\compiler.py", line 4809, in visit_select
+    compile_state = select_stmt._compile_state_factory(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\base.py", line 775, in create_for_statement
+    return klass.create_for_statement(statement, compiler, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 447, in create_for_statement
+    return cls._create_orm_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 1175, in _create_orm_context
+    _QueryEntity.to_compile_state(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 2628, in to_compile_state
+    _MapperEntity(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 2708, in __init__
+    entity._post_inspect
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 1235, in __get__
+    obj.__dict__[self.__name__] = result = self.fget(obj)
+                                           ^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2733, in _post_inspect
+    self._check_configure()
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2410, in _check_configure
+    _configure_registries({self.registry}, cascade=True)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 4227, in _configure_registries
+    _do_configure_registries(registries, cascade)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 4268, in _do_configure_registries
+    mapper._post_configure_properties()
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2427, in _post_configure_properties
+    prop.init()
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\interfaces.py", line 595, in init
+    self.do_init()
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\relationships.py", line 1660, in do_init
+    self._generate_backref()
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\relationships.py", line 2144, in _generate_backref
+    self._add_reverse_property(self.back_populates)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\relationships.py", line 1591, in _add_reverse_property
+    other = self.mapper.get_property(key, _configure_mappers=False)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\mapper.py", line 2533, in get_property
+    raise sa_exc.InvalidRequestError(
+sqlalchemy.exc.InvalidRequestError: Mapper 'Mapper[MediaFile(media_files)]' has no property 'employees'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called.
+2026-05-05 22:28:54,808 | WARNING | Login failed for username="adirtka" from client=127.0.0.1: invalid credentials
+2026-05-05 22:29:02,369 | WARNING | Login failed for username="adirtka" from client=127.0.0.1: invalid credentials
+2026-05-05 22:29:16,837 | WARNING | Login failed for username="adirtka" from client=127.0.0.1: invalid credentials
+2026-05-05 22:29:22,902 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-05 22:33:40,879 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-05 22:37:05,556 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-05 22:38:55,563 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-05 22:40:43,275 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-05 22:41:43,566 | ERROR | Failed to create employee
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\src\routes\employee.py", line 58, in create_employee
+    presigned_url: str = get_presigned_put_url(settings.s3_bucket_name, storage_key)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\services\media.py", line 16, in get_presigned_put_url
+    upload_url: str = minio_client.get_presigned_url(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\minio\api.py", line 2476, in get_presigned_url
+    region = self._get_region(bucket_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\minio\api.py", line 498, in _get_region
+    response = self._url_open(
+               ^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\minio\api.py", line 272, in _url_open
+    headers = sign_v4_s3(
+              ^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\minio\signer.py", line 229, in sign_v4_s3
+    return _sign_v4(
+           ^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\minio\signer.py", line 207, in _sign_v4
+    signing_key = _get_signing_key(
+                  ^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\minio\signer.py", line 152, in _get_signing_key
+    ("AWS4" + secret_key).encode(),
+     ~~~~~~~^~~~~~~~~~~~
+TypeError: can only concatenate str (not "SecretStr") to str
+2026-05-05 22:43:10,038 | ERROR | Failed to create employee
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\src\routes\employee.py", line 69, in create_employee
+    photo=employee.photo,
+          ^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1131, in _fire_loader_callables
+    return self.callable_(state, passive)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 978, in _load_for_state
+    return self._emit_lazyload(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 1079, in _emit_lazyload
+    return loading.load_on_pk_identity(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2366, in _handle_dbapi_exception
+    raise exc_info[1].with_traceback(exc_info[2])
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+2026-05-06 11:25:36,874 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-06 11:25:37,073 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-06 11:25:37,074 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-06 11:26:08,717 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-06 11:26:25,393 | INFO | Login succeeded for user_id=2f015f3c-2a1f-408f-a39e-17d7311b54a4 username="adirtka" from client=127.0.0.1
+2026-05-06 11:29:23,140 | ERROR | Failed to update employee photo
+Traceback (most recent call last):
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/src/routes/employee.py", line 176, in update_employee_photo
+    storage_key, presigned_url, public_url = build_employee_photo_payload(
+                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        photo_filename=employee_data.photo_filename,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/src/routes/employee.py", line 51, in build_employee_photo_payload
+    presigned_url: str = get_presigned_put_url(settings.s3_bucket_name, storage_key)
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/src/services/media.py", line 16, in get_presigned_put_url
+    upload_url: str = minio_client.get_presigned_url(
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        bucket_name=bucket_name,
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        method="PUT",
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/.venv/lib/python3.13/site-packages/minio/api.py", line 2476, in get_presigned_url
+    region = self._get_region(bucket_name)
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/.venv/lib/python3.13/site-packages/minio/api.py", line 498, in _get_region
+    response = self._url_open(
+        "GET",
+    ...<2 lines>...
+        query_params={"location": ""},
+    )
+  File "/home/adirtka/Projects/PyCharmProjects/dop/backend/.venv/lib/python3.13/site-packages/minio/api.py", line 427, in _url_open
+    raise response_error
+minio.error.S3Error: S3 operation failed; code: NoSuchBucket, message: The specified bucket does not exist, resource: /dop-media, request_id: 18ACD5BD94B7021C, host_id: dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8, bucket_name: dop-media
+2026-05-06 14:11:45,690 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-06 14:12:02,821 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-06 14:16:13,628 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-07 17:16:37,773 | ERROR | Unhandled error during GET "/event/" from client=127.0.0.1
+Traceback (most recent call last):
+  File "asyncpg/protocol/prepared_stmt.pyx", line 175, in asyncpg.protocol.protocol.PreparedStatementState._encode_bind_msg
+  File "asyncpg/protocol/codecs/base.pyx", line 251, in asyncpg.protocol.protocol.Codec.encode
+  File "asyncpg/protocol/codecs/base.pyx", line 153, in asyncpg.protocol.protocol.Codec.encode_scalar
+  File "asyncpg/pgproto/codecs/datetime.pyx", line 152, in asyncpg.pgproto.pgproto.timestamp_encode
+TypeError: can't subtract offset-naive and offset-aware datetimes
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 550, in _prepare_and_execute
+    self._rows = deque(await prepared_stmt.fetch(*parameters))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 177, in fetch
+    data = await self.__bind_execute(args, 0, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 268, in __bind_execute
+    data, status, _ = await self.__do_execute(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 257, in __do_execute
+    return await executor(protocol)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 184, in bind_execute
+  File "asyncpg/protocol/prepared_stmt.pyx", line 204, in asyncpg.protocol.protocol.PreparedStatementState._encode_bind_msg
+asyncpg.exceptions.DataError: invalid input for query argument $1: datetime.datetime(2026, 5, 6, 7, 16, 35,... (can't subtract offset-naive and offset-aware datetimes)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: datetime.datetime(2026, 5, 6, 7, 16, 35,... (can't subtract offset-naive and offset-aware datetimes)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\danle\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\main.py", line 51, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\routes\event.py", line 21, in read_events
+    return await get_events(session, limit, offset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\repository\event.py", line 19, in get_events
+    result = await session.execute(stmt)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: datetime.datetime(2026, 5, 6, 7, 16, 35,... (can't subtract offset-naive and offset-aware datetimes)
+[SQL: SELECT events.id, events.name, events.start_time, events.end_time, events.is_public, events.organization_id, events.created_at 
+FROM events 
+WHERE events.is_public IS true AND events.end_time < $1::TIMESTAMP WITHOUT TIME ZONE 
+ LIMIT $2::INTEGER OFFSET $3::INTEGER]
+[parameters: (datetime.datetime(2026, 5, 6, 7, 16, 35, 654749, tzinfo=datetime.timezone.utc), 10, 0)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2026-05-07 17:18:47,540 | ERROR | Unhandled error during GET "/event/" from client=127.0.0.1
+Traceback (most recent call last):
+  File "asyncpg/protocol/prepared_stmt.pyx", line 175, in asyncpg.protocol.protocol.PreparedStatementState._encode_bind_msg
+  File "asyncpg/protocol/codecs/base.pyx", line 251, in asyncpg.protocol.protocol.Codec.encode
+  File "asyncpg/protocol/codecs/base.pyx", line 153, in asyncpg.protocol.protocol.Codec.encode_scalar
+  File "asyncpg/pgproto/codecs/datetime.pyx", line 152, in asyncpg.pgproto.pgproto.timestamp_encode
+TypeError: can't subtract offset-naive and offset-aware datetimes
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 550, in _prepare_and_execute
+    self._rows = deque(await prepared_stmt.fetch(*parameters))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 177, in fetch
+    data = await self.__bind_execute(args, 0, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 268, in __bind_execute
+    data, status, _ = await self.__do_execute(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 257, in __do_execute
+    return await executor(protocol)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 184, in bind_execute
+  File "asyncpg/protocol/prepared_stmt.pyx", line 204, in asyncpg.protocol.protocol.PreparedStatementState._encode_bind_msg
+asyncpg.exceptions.DataError: invalid input for query argument $1: datetime.datetime(2026, 5, 6, 7, 18, 47,... (can't subtract offset-naive and offset-aware datetimes)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: datetime.datetime(2026, 5, 6, 7, 18, 47,... (can't subtract offset-naive and offset-aware datetimes)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\danle\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\main.py", line 51, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\routes\event.py", line 21, in read_events
+    return await get_events(session, limit, offset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\repository\event.py", line 19, in get_events
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $1: datetime.datetime(2026, 5, 6, 7, 18, 47,... (can't subtract offset-naive and offset-aware datetimes)
+[SQL: SELECT events.id, events.name, events.start_time, events.end_time, events.is_public, events.organization_id, events.created_at 
+FROM events 
+WHERE events.is_public IS true AND events.end_time < $1::TIMESTAMP WITHOUT TIME ZONE 
+ LIMIT $2::INTEGER OFFSET $3::INTEGER]
+[parameters: (datetime.datetime(2026, 5, 6, 7, 18, 47, 536057, tzinfo=datetime.timezone.utc), 10, 0)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2026-05-07 17:23:39,412 | ERROR | Unhandled error during GET "/event/" from client=127.0.0.1
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\danle\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\main.py", line 51, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 695, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 300, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 2 validation errors:
+  {'type': 'get_attribute_error', 'loc': ('response', 0, 'media'), 'msg': "Error extracting attribute: MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)", 'input': <src.models.event.Event object at 0x00000250502A9970>, 'ctx': {'error': "MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)"}}
+  {'type': 'get_attribute_error', 'loc': ('response', 1, 'media'), 'msg': "Error extracting attribute: MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)", 'input': <src.models.event.Event object at 0x00000250502A9A00>, 'ctx': {'error': "MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)"}}
+
+  File "D:\Projects\dop\backend\src\routes\event.py", line 15, in read_events
+    GET /event/
+2026-05-07 18:50:59,980 | ERROR | Unhandled error during GET "/event/" from client=127.0.0.1
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\danle\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\main.py", line 51, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 695, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 300, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'model_attributes_type', 'loc': ('response', 0, 'organization'), 'msg': 'Input should be a valid dictionary or object to extract fields from', 'input': None}
+
+  File "D:\Projects\dop\backend\src\routes\event.py", line 32, in read_events
+    GET /event/
+2026-05-07 18:53:05,646 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-07 18:53:13,952 | ERROR | Unhandled error during POST "/event/" from client=127.0.0.1
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\danle\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\main.py", line 51, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\routes\event.py", line 158, in create_event
+    organization=OrganizationShortRead.model_validate(event.organization),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for OrganizationShortRead
+  Input should be a valid dictionary or object to extract fields from [type=model_attributes_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/model_attributes_type
+2026-05-07 18:55:53,356 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-07 23:52:42,396 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-08 00:27:41,645 | ERROR | Unhandled error during PATCH "/event/1836e0b6-fc9d-4800-8594-1085deeddd04" from client=127.0.0.1
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\danle\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\main.py", line 50, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 695, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\fastapi\routing.py", line 300, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'get_attribute_error', 'loc': ('response', 'media'), 'msg': "Error extracting attribute: MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)", 'input': <src.models.event.Event object at 0x000001CF5F5AD700>, 'ctx': {'error': "MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)"}}
+
+  File "D:\Projects\dop\backend\src\routes\event.py", line 172, in update_event
+    PATCH /event/{event_id}
