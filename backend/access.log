@@ -133,3 +133,11 @@
 2026-05-07 18:56:14,637 | INFO | method=GET path="/health" status=200 client=127.0.0.1 duration_ms=0.84
 2026-05-07 18:56:22,605 | INFO | method=GET path="/event/" status=200 client=127.0.0.1 duration_ms=6.07
 2026-05-07 18:56:54,209 | INFO | method=GET path="/event/" status=200 client=127.0.0.1 duration_ms=10.6
+2026-05-07 23:52:42,398 | INFO | method=POST path="/auth/login" status=200 client=127.0.0.1 duration_ms=2217.58
+2026-05-07 23:57:06,925 | INFO | method=POST path="/event/" status=200 client=127.0.0.1 duration_ms=105.04
+2026-05-07 23:58:38,789 | INFO | method=GET path="/event/" status=200 client=127.0.0.1 duration_ms=17.15
+2026-05-08 00:27:41,644 | INFO | method=PATCH path="/event/1836e0b6-fc9d-4800-8594-1085deeddd04" status=500 client=127.0.0.1 duration_ms=2134.46
+2026-05-08 00:28:45,026 | INFO | method=GET path="/employee/" status=200 client=127.0.0.1 duration_ms=20.55
+2026-05-08 00:29:11,169 | INFO | method=POST path="/employee/" status=200 client=127.0.0.1 duration_ms=13.75
+2026-05-08 00:29:15,513 | INFO | method=PATCH path="/employee/74820f61-4139-4dcb-9205-dba4c9298ef9" status=200 client=127.0.0.1 duration_ms=12.89
+2026-05-08 00:33:26,318 | INFO | method=PATCH path="/event/1836e0b6-fc9d-4800-8594-1085deeddd04" status=200 client=127.0.0.1 duration_ms=2126.84

@@ -1,4 +1,5 @@
 from datetime import UTC, datetime, timedelta
+import uuid
 from uuid import UUID
 
 from sqlalchemy import and_, or_, select
@@ -6,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.models import Event
-from src.schemas import EventCreateRequest
+from src.schemas import EventCreateRequest, EventPatchRequest
 
 
 async def get_events(
@@ -72,3 +73,25 @@ async def add_event(
     await session.commit()
     await session.refresh(event)
     return event
+
+
+async def patch_event(
+    session: AsyncSession,
+    event_id: uuid.UUID,
+    event_data: EventPatchRequest,
+) -> Event | None:
+    event = await session.get(Event, event_id)
+
+    if event is None:
+        return None
+
+    update_data = event_data.model_dump(exclude_unset=True)
+
+    for field, value in update_data.items():
+        setattr(event, field, value)
+
+    await session.commit()
+
+    stmt = select(Event).where(Event.id == event_id).options(selectinload(Event.media))
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()

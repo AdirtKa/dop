@@ -11,6 +11,7 @@ from .event import (
     EventCreateRequest,
     EventMediaCreateRequest,
     EventMediaUploadResponse,
+    EventPatchRequest,
     EventPutResponse,
     ReadEventResponse,
 )
@@ -27,6 +28,7 @@ __all__: list[str] = [
     "EventCreateRequest",
     "EventMediaCreateRequest",
     "EventMediaUploadResponse",
+    "EventPatchRequest",
     "EventPutResponse",
     "MediaFileRead",
     "ReadEventResponse",

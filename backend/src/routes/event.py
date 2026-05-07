@@ -1,10 +1,11 @@
 from typing import Annotated
+import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from src.logger import get_error_logger
 from src.models import Event, User, UserRole
-from src.repository.event import add_event, get_events
+from src.repository.event import add_event, get_events, patch_event
 from src.repository.media import attach_event_media
 from src.routes.auth.auth import session_dependency
 from src.routes.auth.dependency import get_current_user, get_optional_current_user
@@ -15,7 +16,7 @@ from src.schemas import (
     MediaFileRead,
     ReadEventResponse,
 )
-from src.schemas.event import EventMediaUploadError, OrganizationShortRead
+from src.schemas.event import EventMediaUploadError, EventPatchRequest, OrganizationShortRead
 from src.services.media import build_media_payload, get_media_kind_by_content_type
 
 router: APIRouter = APIRouter()
@@ -166,3 +167,33 @@ async def create_event(
         upload_urls=upload_urls,
         upload_errors=upload_errors,
     )
+
+
+@router.patch("/{event_id}", response_model=ReadEventResponse)
+async def update_event(
+    session: session_dependency,
+    event_id: uuid.UUID,
+    event_data: EventPatchRequest,
+    current_user: Annotated[User, Depends(get_current_user)],
+):
+    try:
+        if current_user.role == UserRole.ORGANIZATION:
+            data = event_data.model_copy(update={"organization_id": current_user.id})
+        else:
+            data = event_data.model_copy()
+
+        event = await patch_event(session, event_id, data)
+        if event is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Failed to update employee",
+            )
+        return event
+    except HTTPException:
+        raise
+    except Exception as exc:
+        error_logger.exception("Failed to update event", exc_info=exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update event",
+        ) from exc

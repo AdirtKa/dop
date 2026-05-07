@@ -72,3 +72,10 @@ class EventPutResponse(BaseModel):
     media: list[MediaFileRead]
     upload_urls: list[EventMediaUploadResponse] = Field(default_factory=list)
     upload_errors: list[EventMediaUploadError] = Field(default_factory=list)
+
+
+class EventPatchRequest(BaseModel):
+    name: str
+    start_time: datetime
+    end_time: datetime
+    organization_id: uuid.UUID | None
