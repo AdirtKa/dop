@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./media-carousel.css";
 
@@ -12,16 +12,27 @@ type MediaItem = {
 
 type MediaCarouselProps = {
     items: MediaItem[];
+    onCurrentItemChange?: (item: MediaItem) => void;
 };
 
-export function MediaCarousel({ items }: MediaCarouselProps) {
+export function MediaCarousel({ items, onCurrentItemChange }: MediaCarouselProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        setCurrentIndex((index) => Math.min(index, Math.max(items.length - 1, 0)));
+    }, [items.length]);
 
     if (items.length === 0) {
         return null;
     }
 
     const currentItem = items[currentIndex];
+
+    useEffect(() => {
+        if (currentItem) {
+            onCurrentItemChange?.(currentItem);
+        }
+    }, [currentItem, onCurrentItemChange]);
 
     const goToPrev = () => {
         setCurrentIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1));

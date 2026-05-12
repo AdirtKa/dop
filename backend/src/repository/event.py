@@ -87,6 +87,17 @@ async def get_event_by_id(session: AsyncSession, event_id: uuid.UUID) -> Event |
     return result.scalar_one_or_none()
 
 
+async def delete_event_by_id(session: AsyncSession, event_id: uuid.UUID) -> bool:
+    event = await session.get(Event, event_id)
+    if event is None:
+        return False
+
+    await session.delete(event)
+    await session.commit()
+
+    return True
+
+
 async def patch_event(
     session: AsyncSession,
     event_id: uuid.UUID,
@@ -180,3 +191,18 @@ async def update_event_media_upload_data(
     await session.refresh(media)
 
     return media
+
+
+async def delete_event_media(
+    session: AsyncSession,
+    event_id: uuid.UUID,
+    media_id: uuid.UUID,
+) -> bool:
+    media = await get_event_media(session, event_id, media_id)
+    if media is None:
+        return False
+
+    await session.delete(media)
+    await session.commit()
+
+    return True

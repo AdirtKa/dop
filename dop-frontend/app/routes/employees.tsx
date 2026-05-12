@@ -132,12 +132,19 @@ export default function EmployeesPage() {
             updateEmployeePhoto(employee.id, { photoFile: file }, token),
         );
 
-        if (updated.presignedUrl) {
-            await uploadFileToPresignedUrl(updated.presignedUrl, file);
-        }
+            if (updated.presignedUrl) {
+                await uploadFileToPresignedUrl(updated.presignedUrl, file);
+            }
 
-        setEmployees((current) =>
-            current.map((item) => (item.id === employee.id ? updated.employee : item)),
+            setEmployees((current) =>
+            current.map((item) =>
+                item.id === employee.id
+                    ? {
+                        ...updated.employee,
+                        photoSrc: URL.createObjectURL(file),
+                    }
+                    : item,
+            ),
         );
     }
 

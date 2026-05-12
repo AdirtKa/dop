@@ -9,6 +9,8 @@ from src.models import Event, MediaStatus, User, UserRole
 from src.repository.event import (
     add_event,
     change_visibility,
+    delete_event_by_id,
+    delete_event_media,
     get_event_by_id,
     get_event_media,
     get_event_owner,
@@ -238,6 +240,31 @@ async def update_event(
         ) from exc
 
 
+@router.delete("/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_event(
+    session: session_dependency,
+    event_id: uuid.UUID,
+    current_user: Annotated[User, Depends(require_event_manager)],
+) -> None:
+    try:
+        await ensure_event_write_access(session, event_id, current_user)
+
+        deleted = await delete_event_by_id(session, event_id)
+        if not deleted:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Event not found",
+            )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        error_logger.exception("Failed to delete event", exc_info=exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete event",
+        ) from exc
+
+
 @router.post("/{event_id}/media", response_model=EventMediaUploadResponse)
 async def add_event_media_upload(
     session: session_dependency,
@@ -319,6 +346,32 @@ async def update_event_media_upload(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to update event media upload",
+        ) from exc
+
+
+@router.delete("/{event_id}/media/{media_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_event_media_upload(
+    session: session_dependency,
+    event_id: uuid.UUID,
+    media_id: uuid.UUID,
+    current_user: Annotated[User, Depends(require_event_manager)],
+) -> None:
+    try:
+        await ensure_event_write_access(session, event_id, current_user)
+
+        deleted = await delete_event_media(session, event_id, media_id)
+        if not deleted:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Media not found",
+            )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        error_logger.exception("Failed to delete event media", exc_info=exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete event media",
         ) from exc
 
 

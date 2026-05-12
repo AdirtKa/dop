@@ -22,6 +22,7 @@ type AuthContextValue = {
     errorMessage: string | null;
     isAdmin: boolean;
     isAuthenticated: boolean;
+    isEventManager: boolean;
     status: AuthStatus;
     user: AuthUser | null;
     loginWithPassword: (payload: LoginPayload) => Promise<void>;
@@ -161,6 +162,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         errorMessage,
         isAdmin: user?.role === "admin",
         isAuthenticated: status === "authenticated",
+        isEventManager: user?.role === "admin" || user?.role === "organization",
         status,
         user,
         loginWithPassword,

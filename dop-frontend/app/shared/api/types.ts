@@ -5,6 +5,7 @@ export type ApiMediaFile = {
     public_url: string | null;
     mime_type: string;
     kind: ApiMediaKind;
+    status?: "pending" | "ready" | "failed" | null;
     created_at: string;
 };
 
@@ -75,4 +76,59 @@ export type TokenResponse = {
 
 export type LoginResponse = TokenResponse & {
     user: AuthUser;
+};
+
+export type ApiOrganizationShort = {
+    id: string;
+    name: string;
+};
+
+export type ApiEvent = {
+    id: string;
+    name: string;
+    start_time: string;
+    end_time: string;
+    is_public: boolean;
+    organization: ApiOrganizationShort | null;
+    media: ApiMediaFile[];
+};
+
+export type ApiEventMediaUpload = {
+    media_file: ApiMediaFile;
+    presigned_url: string;
+};
+
+export type ApiEventMediaUploadError = {
+    filename: string;
+    detail: string;
+};
+
+export type ApiEventMutationResponse = ApiEvent & {
+    upload_urls: ApiEventMediaUpload[];
+    upload_errors: ApiEventMediaUploadError[];
+};
+
+export type EventPayload = {
+    name: string;
+    startTime: string;
+    endTime: string;
+    isPublic: boolean;
+};
+
+export type EventCreatePayload = EventPayload & {
+    mediaFiles?: File[];
+};
+
+export type EventMediaPayload = {
+    mediaFile: File;
+};
+
+export type EventItem = {
+    id: string;
+    name: string;
+    startTime: string;
+    endTime: string;
+    isPublic: boolean;
+    organization: ApiOrganizationShort | null;
+    media: ApiMediaFile[];
 };

@@ -921,3 +921,149 @@ fastapi.exceptions.ResponseValidationError: 1 validation error:
 
   File "D:\Projects\dop\backend\src\routes\event.py", line 172, in update_event
     PATCH /event/{event_id}
+2026-05-12 18:28:14,229 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:28:18,561 | ERROR | Failed to load events list
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 526, in _prepare_and_execute
+    prepared_stmt, attributes = await adapt_connection._prepare(
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 773, in _prepare
+    prepared_stmt = await self._connection.prepare(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\asyncpg\connection.py", line 638, in prepare
+    return await self._prepare(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\asyncpg\connection.py", line 657, in _prepare
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\asyncpg\connection.py", line 443, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 165, in prepare
+asyncpg.exceptions.UndefinedColumnError: column media_files.status does not exist
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError: <class 'asyncpg.exceptions.UndefinedColumnError'>: column media_files.status does not exist
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Projects\dop\backend\src\routes\event.py", line 87, in read_events
+    return await get_events(
+           ^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\src\repository\event.py", line 57, in get_events
+    result = await session.execute(stmt)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 309, in orm_execute_statement
+    return cls.orm_setup_cursor_result(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 616, in orm_setup_cursor_result
+    return loading.instances(result, querycontext)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 262, in instances
+    _prebuffered = list(chunks(None))
+                   ^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 247, in chunks
+    post_load.invoke(context, path)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 1564, in invoke
+    loader(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 3350, in _load_for_path
+    self._load_via_parent(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\strategies.py", line 3426, in _load_via_parent
+    context.session.execute(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "D:\Projects\dop\backend\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.ProgrammingError: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column media_files.status does not exist
+[SQL: SELECT events_1.id AS events_1_id, media_files.id AS media_files_id, media_files.storage_key AS media_files_storage_key, media_files.public_url AS media_files_public_url, media_files.mime_type AS media_files_mime_type, media_files.kind AS media_files_kind, media_files.status AS media_files_status, media_files.created_at AS media_files_created_at 
+FROM events AS events_1 JOIN event_media AS event_media_1 ON events_1.id = event_media_1.event_id JOIN media_files ON media_files.id = event_media_1.media_file_id 
+WHERE events_1.id IN ($1::UUID, $2::UUID, $3::UUID)]
+[parameters: (UUID('5144cb2b-07cf-4bac-bd6a-125e04b8d76c'), UUID('166a8f82-9248-446c-93b7-b70890ecf1ae'), UUID('8f536c15-bcd7-45f6-a265-5f2465db289e'))]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-05-12 18:28:18,836 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:28:18,838 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:32:08,514 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:32:21,549 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-12 18:36:10,377 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:36:10,379 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:43:08,681 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:43:10,875 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:43:24,448 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1
+2026-05-12 18:47:06,317 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:47:42,316 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:47:42,320 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:47:56,173 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:47:57,168 | WARNING | Refresh rejected from client=127.0.0.1: Missing refresh token
+2026-05-12 18:56:06,459 | INFO | Login succeeded for user_id=f1ccf50d-fa9b-435a-9b1f-2cfeca8ec8cb username="adirtka" from client=127.0.0.1

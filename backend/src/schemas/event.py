@@ -19,6 +19,7 @@ class ReadEventResponse(BaseModel):
     name: str
     start_time: datetime
     end_time: datetime
+    is_public: bool
     organization: OrganizationShortRead | None
     media: list[MediaFileRead]
 
@@ -82,6 +83,7 @@ class EventPatchRequest(BaseModel):
     name: str
     start_time: datetime
     end_time: datetime
+    is_public: bool
     organization_id: uuid.UUID | None
 
 
