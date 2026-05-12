@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.config import settings
-from src.models import Event, MediaFile, MediaStatus, event_media
+from src.models import Event, MediaFile, MediaKind, MediaStatus, event_media
 from src.schemas import EventCreateRequest, EventPatchRequest
 
 
@@ -74,6 +74,17 @@ async def add_event(
     await session.commit()
     await session.refresh(event)
     return event
+
+
+async def get_event_by_id(session: AsyncSession, event_id: uuid.UUID) -> Event | None:
+    stmt = (
+        select(Event)
+        .where(Event.id == event_id)
+        .options(selectinload(Event.media))
+        .options(selectinload(Event.organization))
+    )
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()
 
 
 async def patch_event(
@@ -152,3 +163,20 @@ async def mark_event_media_ready(session: AsyncSession, media: MediaFile) -> Med
 async def mark_event_media_failed(session: AsyncSession, media: MediaFile) -> None:
     media.status = MediaStatus.failed
     await session.commit()
+
+
+async def update_event_media_upload_data(
+    session: AsyncSession,
+    media: MediaFile,
+    mime_type: str,
+    media_kind: MediaKind,
+) -> MediaFile:
+    media.mime_type = mime_type
+    media.kind = media_kind
+    media.status = MediaStatus.pending
+    media.public_url = None
+
+    await session.commit()
+    await session.refresh(media)
+
+    return media

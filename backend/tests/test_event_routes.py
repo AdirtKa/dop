@@ -9,7 +9,7 @@ import pytest
 
 from src.models import Event, MediaFile, MediaKind, MediaStatus, User, UserRole
 from src.routes import event as event_routes
-from src.schemas.event import EventCreateRequest
+from src.schemas.event import EventCreateRequest, EventMediaCreateRequest, EventMediaUpdateRequest
 
 
 def make_event(*, organization_id: uuid.UUID | None = None) -> Event:
@@ -114,6 +114,81 @@ async def test_complete_event_media_upload_marks_media_ready(monkeypatch) -> Non
     assert result.status == MediaStatus.ready
     assert result.public_url == ready_media.public_url
     failed_mock.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_add_event_media_upload_returns_pending_media(monkeypatch) -> None:
+    event = make_event()
+    media = make_media(status=MediaStatus.pending)
+
+    monkeypatch.setattr(event_routes, "get_event_owner", AsyncMock(return_value=None))
+    monkeypatch.setattr(event_routes, "get_event_by_id", AsyncMock(return_value=event))
+    monkeypatch.setattr(
+        event_routes,
+        "build_media_payload",
+        lambda **_: (
+            "events/event-id/new.jpg",
+            "https://s3.example.com/new-presigned",
+            "https://cdn.example.com/events/event-id/new.jpg",
+        ),
+    )
+    attach_mock = AsyncMock(return_value=(event, media))
+    monkeypatch.setattr(event_routes, "attach_event_media", attach_mock)
+
+    result = await event_routes.add_event_media_upload(
+        session=object(),
+        event_id=event.id,
+        media_data=EventMediaCreateRequest(filename="new.jpg", content_type="image/jpeg"),
+        current_user=User(
+            id=uuid.uuid4(),
+            username="admin",
+            password_hash="hash",
+            role=UserRole.ADMIN,
+            is_active=True,
+        ),
+    )
+
+    assert result.presigned_url == "https://s3.example.com/new-presigned"
+    assert result.media_file.status == MediaStatus.pending
+    assert result.media_file.public_url is None
+    attach_mock.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_update_event_media_upload_reissues_presigned_url(monkeypatch) -> None:
+    media = make_media(status=MediaStatus.ready)
+    updated_media = make_media(status=MediaStatus.pending)
+    updated_media.id = media.id
+    updated_media.storage_key = media.storage_key
+
+    monkeypatch.setattr(event_routes, "get_event_owner", AsyncMock(return_value=None))
+    monkeypatch.setattr(event_routes, "get_event_media", AsyncMock(return_value=media))
+    update_mock = AsyncMock(return_value=updated_media)
+    monkeypatch.setattr(event_routes, "update_event_media_upload_data", update_mock)
+    monkeypatch.setattr(
+        event_routes,
+        "get_presigned_put_url",
+        lambda *_: "https://s3.example.com/reupload",
+    )
+
+    result = await event_routes.update_event_media_upload(
+        session=object(),
+        event_id=uuid.uuid4(),
+        media_id=media.id,
+        media_data=EventMediaUpdateRequest(filename="replace.jpg", content_type="image/jpeg"),
+        current_user=User(
+            id=uuid.uuid4(),
+            username="admin",
+            password_hash="hash",
+            role=UserRole.ADMIN,
+            is_active=True,
+        ),
+    )
+
+    assert result.presigned_url == "https://s3.example.com/reupload"
+    assert result.media_file.status == MediaStatus.pending
+    assert result.media_file.public_url is None
+    update_mock.assert_awaited_once()
 
 
 @pytest.mark.asyncio

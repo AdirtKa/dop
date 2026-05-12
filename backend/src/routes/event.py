@@ -9,18 +9,25 @@ from src.models import Event, MediaStatus, User, UserRole
 from src.repository.event import (
     add_event,
     change_visibility,
+    get_event_by_id,
     get_event_media,
     get_event_owner,
     get_events,
     mark_event_media_failed,
     mark_event_media_ready,
     patch_event,
+    update_event_media_upload_data,
 )
 from src.repository.media import attach_event_media
 from src.routes.auth.auth import session_dependency
-from src.routes.auth.dependency import get_current_user, get_optional_current_user
+from src.routes.auth.dependency import (
+    get_optional_current_user,
+    require_event_manager,
+)
 from src.schemas import (
     EventCreateRequest,
+    EventMediaCreateRequest,
+    EventMediaUpdateRequest,
     EventMediaUploadResponse,
     EventPutResponse,
     MediaFileRead,
@@ -35,6 +42,7 @@ from src.schemas.event import (
 from src.services.media import (
     build_media_payload,
     get_media_kind_by_content_type,
+    get_presigned_put_url,
     validate_uploaded_media_object,
 )
 
@@ -49,6 +57,22 @@ ALLOWED_EVENT_MEDIA_TYPES = {
 }
 
 error_logger = get_error_logger()
+
+
+async def ensure_event_write_access(
+    session: session_dependency,
+    event_id: uuid.UUID,
+    current_user: User,
+) -> None:
+    if current_user.role != UserRole.ORGANIZATION:
+        return
+
+    owner_id = await get_event_owner(session, event_id)
+    if current_user.id != owner_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not have permission to update this event",
+        )
 
 
 @router.get("/", response_model=list[ReadEventResponse])
@@ -100,19 +124,13 @@ async def read_events(
 async def create_event(
     session: session_dependency,
     event_data: EventCreateRequest,
-    current_user: Annotated[User, Depends(get_current_user)],
+    current_user: Annotated[User, Depends(require_event_manager)],
 ):
     try:
         data = event_data.model_copy()
 
         if current_user.role == UserRole.ORGANIZATION:
             data = data.model_copy(update={"organization_id": current_user.id})
-
-        elif current_user.role not in {UserRole.EMPLOYEE, UserRole.ADMIN}:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You do not have permission to create events",
-            )
 
         event: Event = await add_event(session, data)
 
@@ -193,15 +211,12 @@ async def update_event(
     session: session_dependency,
     event_id: uuid.UUID,
     event_data: EventPatchRequest,
-    current_user: Annotated[User, Depends(get_current_user)],
+    current_user: Annotated[User, Depends(require_event_manager)],
 ):
     try:
+        await ensure_event_write_access(session, event_id, current_user)
+
         if current_user.role == UserRole.ORGANIZATION:
-            if current_user.id != await get_event_owner(session, event_id):
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="You do not have permission to update this event",
-                )
             data = event_data.model_copy(update={"organization_id": current_user.id})
         else:
             data = event_data.model_copy()
@@ -223,26 +238,99 @@ async def update_event(
         ) from exc
 
 
+@router.post("/{event_id}/media", response_model=EventMediaUploadResponse)
+async def add_event_media_upload(
+    session: session_dependency,
+    event_id: uuid.UUID,
+    media_data: EventMediaCreateRequest,
+    current_user: Annotated[User, Depends(require_event_manager)],
+):
+    try:
+        await ensure_event_write_access(session, event_id, current_user)
+
+        event = await get_event_by_id(session, event_id)
+        if event is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Event not found",
+            )
+
+        storage_key, presigned_url, _public_url = build_media_payload(
+            filename=media_data.filename,
+            storage_prefix=f"events/{event.id}",
+        )
+        event, attached_media = await attach_event_media(
+            session=session,
+            event=event,
+            storage_key=storage_key,
+            public_url=None,
+            mime_type=media_data.content_type,
+            media_kind=get_media_kind_by_content_type(media_data.content_type),
+        )
+
+        return EventMediaUploadResponse(
+            media_file=MediaFileRead.model_validate(attached_media),
+            presigned_url=presigned_url,
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        error_logger.exception("Failed to add event media upload", exc_info=exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to add event media upload",
+        ) from exc
+
+
+@router.put("/{event_id}/media/{media_id}", response_model=EventMediaUploadResponse)
+async def update_event_media_upload(
+    session: session_dependency,
+    event_id: uuid.UUID,
+    media_id: uuid.UUID,
+    media_data: EventMediaUpdateRequest,
+    current_user: Annotated[User, Depends(require_event_manager)],
+):
+    try:
+        await ensure_event_write_access(session, event_id, current_user)
+
+        media = await get_event_media(session, event_id, media_id)
+        if media is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Media not found",
+            )
+
+        media = await update_event_media_upload_data(
+            session=session,
+            media=media,
+            mime_type=media_data.content_type,
+            media_kind=get_media_kind_by_content_type(media_data.content_type),
+        )
+        presigned_url = get_presigned_put_url(settings.s3_bucket_name, media.storage_key)
+
+        return EventMediaUploadResponse(
+            media_file=MediaFileRead.model_validate(media),
+            presigned_url=presigned_url,
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        error_logger.exception("Failed to update event media upload", exc_info=exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update event media upload",
+        ) from exc
+
+
 @router.post("/{event_id}/media/{media_id}/complete", response_model=MediaFileRead)
 async def complete_event_media_upload(
     session: session_dependency,
     event_id: uuid.UUID,
     media_id: uuid.UUID,
-    current_user: Annotated[User, Depends(get_current_user)],
+    current_user: Annotated[User, Depends(require_event_manager)],
 ):
     try:
-        if current_user.role == UserRole.ORGANIZATION:
-            owner_id = await get_event_owner(session, event_id)
-            if current_user.id != owner_id:
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="You do not have permission to update this event",
-                )
-        elif current_user.role not in {UserRole.EMPLOYEE, UserRole.ADMIN}:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You do not have permission to update this event",
-            )
+        await ensure_event_write_access(session, event_id, current_user)
 
         media = await get_event_media(session, event_id, media_id)
         if media is None:
@@ -286,16 +374,10 @@ async def update_event_visibility(
     session: session_dependency,
     event_id: uuid.UUID,
     event_data: EventVisibilityPatchRequest,
-    current_user: Annotated[User, Depends(get_current_user)],
+    current_user: Annotated[User, Depends(require_event_manager)],
 ):
     try:
-        if current_user.role == UserRole.ORGANIZATION and current_user.id != await get_event_owner(
-            session, event_id
-        ):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You do not have permission to update this event",
-            )
+        await ensure_event_write_access(session, event_id, current_user)
 
         result: bool = await change_visibility(session, event_id, event_data.is_public)
         if result:

@@ -43,6 +43,10 @@ class EventMediaCreateRequest(BaseModel):
         return self
 
 
+class EventMediaUpdateRequest(EventMediaCreateRequest):
+    pass
+
+
 class EventCreateRequest(BaseModel):
     name: str
     start_time: datetime

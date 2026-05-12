@@ -103,3 +103,4 @@ def require_roles(*allowed_roles: UserRole):
 require_employee = require_roles(UserRole.EMPLOYEE, UserRole.ADMIN)
 require_admin = require_roles(UserRole.ADMIN)
 require_organization = require_roles(UserRole.ORGANIZATION, UserRole.ADMIN)
+require_event_manager = require_roles(UserRole.ORGANIZATION, UserRole.ADMIN)

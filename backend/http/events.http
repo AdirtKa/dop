@@ -108,6 +108,54 @@ client.test("created event either returns upload metadata or upload error", func
 %}
 
 ###
+# Add media upload to existing event
+POST {{baseUrl}}/event/{{public_event_without_media_id}}/media
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "filename": "extra-event-media.webp",
+  "content_type": "image/webp"
+}
+
+> {%
+client.test("add event media upload returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("added event media is pending", function () {
+  client.assert(!!response.body.presigned_url, "Expected presigned_url");
+  client.assert(response.body.media_file.status === "pending", "Expected pending media");
+  client.assert(response.body.media_file.public_url === null, "Expected no public URL before completion");
+});
+client.global.set("extra_event_media_id", response.body.media_file.id);
+%}
+
+###
+# Reissue upload URL for existing event media
+PUT {{baseUrl}}/event/{{public_event_with_media_id}}/media/{{public_event_media_id}}
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "filename": "replacement-event-media.jpg",
+  "content_type": "image/jpeg"
+}
+
+> {%
+client.test("update event media upload returns 200", function () {
+  client.assert(response.status === 200, "Expected status 200");
+});
+client.test("updated event media is pending again", function () {
+  client.assert(!!response.body.presigned_url, "Expected presigned_url");
+  client.assert(response.body.media_file.id === client.global.get("public_event_media_id"), "Expected same media id");
+  client.assert(response.body.media_file.status === "pending", "Expected pending media");
+  client.assert(response.body.media_file.public_url === null, "Expected public URL reset before completion");
+});
+%}
+
+###
 # Patch event
 PATCH {{baseUrl}}/event/{{public_event_without_media_id}}
 Accept: application/json

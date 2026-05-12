@@ -10,6 +10,7 @@ from .employee import (
 from .event import (
     EventCreateRequest,
     EventMediaCreateRequest,
+    EventMediaUpdateRequest,
     EventMediaUploadResponse,
     EventPatchRequest,
     EventPutResponse,
@@ -27,6 +28,7 @@ __all__: list[str] = [
     "EmployeeRead",
     "EventCreateRequest",
     "EventMediaCreateRequest",
+    "EventMediaUpdateRequest",
     "EventMediaUploadResponse",
     "EventPatchRequest",
     "EventPutResponse",
