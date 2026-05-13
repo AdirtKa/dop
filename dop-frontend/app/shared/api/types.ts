@@ -86,9 +86,10 @@ export type ApiOrganizationShort = {
 export type ApiEvent = {
     id: string;
     name: string;
+    details?: string;
     start_time: string;
     end_time: string;
-    is_public: boolean;
+    is_public?: boolean;
     organization: ApiOrganizationShort | null;
     media: ApiMediaFile[];
 };
@@ -110,6 +111,7 @@ export type ApiEventMutationResponse = ApiEvent & {
 
 export type EventPayload = {
     name: string;
+    details: string;
     startTime: string;
     endTime: string;
     isPublic: boolean;
@@ -126,6 +128,7 @@ export type EventMediaPayload = {
 export type EventItem = {
     id: string;
     name: string;
+    details: string;
     startTime: string;
     endTime: string;
     isPublic: boolean;

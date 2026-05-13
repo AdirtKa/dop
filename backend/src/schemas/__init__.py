@@ -14,6 +14,7 @@ from .event import (
     EventMediaUploadResponse,
     EventPatchRequest,
     EventPutResponse,
+    ExtendedReadEventResponse,
     ReadEventResponse,
 )
 from .mediafile import MediaFileRead
@@ -32,6 +33,7 @@ __all__: list[str] = [
     "EventMediaUploadResponse",
     "EventPatchRequest",
     "EventPutResponse",
+    "ExtendedReadEventResponse",
     "MediaFileRead",
     "ReadEventResponse",
     "TokenData",

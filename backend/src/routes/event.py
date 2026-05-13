@@ -32,6 +32,7 @@ from src.schemas import (
     EventMediaUpdateRequest,
     EventMediaUploadResponse,
     EventPutResponse,
+    ExtendedReadEventResponse,
     MediaFileRead,
     ReadEventResponse,
 )
@@ -77,7 +78,7 @@ async def ensure_event_write_access(
         )
 
 
-@router.get("/", response_model=list[ReadEventResponse])
+@router.get("/", response_model=list[ExtendedReadEventResponse | ReadEventResponse])
 async def read_events(
     session: session_dependency,
     current_user: Annotated[User | None, Depends(get_optional_current_user)],
@@ -86,16 +87,17 @@ async def read_events(
 ):
     try:
         if current_user is None:
-            return await get_events(
+            events = await get_events(
                 session=session,
                 limit=limit,
                 offset=offset,
                 is_public=True,
                 is_finished=True,
             )
+            return [ReadEventResponse.model_validate(event) for event in events]
 
         if current_user.role == UserRole.ORGANIZATION:
-            return await get_events(
+            events = await get_events(
                 session=session,
                 limit=limit,
                 offset=offset,
@@ -104,9 +106,11 @@ async def read_events(
                 organization_id=current_user.id,
                 include_own_events=True,
             )
+            return [ExtendedReadEventResponse.model_validate(event) for event in events]
 
         if current_user.role in {UserRole.EMPLOYEE, UserRole.ADMIN}:
-            return await get_events(session, limit, offset)
+            events = await get_events(session, limit, offset)
+            return [ExtendedReadEventResponse.model_validate(event) for event in events]
 
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -196,6 +200,7 @@ async def create_event(
         name=event.name,
         start_time=event.start_time,
         end_time=event.end_time,
+        details=event.details,
         is_public=event.is_public,
         organization=(
             OrganizationShortRead.model_validate(event.organization)
@@ -208,7 +213,7 @@ async def create_event(
     )
 
 
-@router.patch("/{event_id}", response_model=ReadEventResponse)
+@router.patch("/{event_id}", response_model=ExtendedReadEventResponse)
 async def update_event(
     session: session_dependency,
     event_id: uuid.UUID,

@@ -19,9 +19,15 @@ class ReadEventResponse(BaseModel):
     name: str
     start_time: datetime
     end_time: datetime
-    is_public: bool
     organization: OrganizationShortRead | None
     media: list[MediaFileRead]
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class ExtendedReadEventResponse(ReadEventResponse):
+    details: str
+    is_public: bool
 
 
 ALLOWED_EVENT_MEDIA_TYPES = {
@@ -50,6 +56,7 @@ class EventMediaUpdateRequest(EventMediaCreateRequest):
 
 class EventCreateRequest(BaseModel):
     name: str
+    details: str = ""
     start_time: datetime
     end_time: datetime
     is_public: bool = False
@@ -70,6 +77,7 @@ class EventMediaUploadError(BaseModel):
 class EventPutResponse(BaseModel):
     id: uuid.UUID
     name: str
+    details: str
     start_time: datetime
     end_time: datetime
     is_public: bool
@@ -81,6 +89,7 @@ class EventPutResponse(BaseModel):
 
 class EventPatchRequest(BaseModel):
     name: str
+    details: str
     start_time: datetime
     end_time: datetime
     is_public: bool
