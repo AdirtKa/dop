@@ -15,6 +15,7 @@ from src.repository.event import (
     get_event_media,
     get_event_owner,
     get_events,
+    has_event_time_conflict,
     mark_event_media_failed,
     mark_event_media_ready,
     patch_event,
@@ -78,6 +79,33 @@ async def ensure_event_write_access(
         )
 
 
+async def ensure_event_time_is_available(
+    session: session_dependency,
+    start_time,
+    end_time,
+    organization_id: uuid.UUID | None,
+    exclude_event_id: uuid.UUID | None = None,
+) -> None:
+    if end_time <= start_time:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Event end time must be later than start time",
+        )
+
+    has_conflict = await has_event_time_conflict(
+        session=session,
+        start_time=start_time,
+        end_time=end_time,
+        organization_id=organization_id,
+        exclude_event_id=exclude_event_id,
+    )
+    if has_conflict:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Event time is already occupied",
+        )
+
+
 @router.get("/", response_model=list[ExtendedReadEventResponse | ReadEventResponse])
 async def read_events(
     session: session_dependency,
@@ -137,6 +165,13 @@ async def create_event(
 
         if current_user.role == UserRole.ORGANIZATION:
             data = data.model_copy(update={"organization_id": current_user.id})
+
+        await ensure_event_time_is_available(
+            session=session,
+            start_time=data.start_time,
+            end_time=data.end_time,
+            organization_id=data.organization_id,
+        )
 
         event: Event = await add_event(session, data)
 
@@ -231,6 +266,14 @@ async def update_event(
             data = event_data.model_copy(update={"organization_id": current_user.id})
         else:
             data = event_data.model_copy()
+
+        await ensure_event_time_is_available(
+            session=session,
+            start_time=data.start_time,
+            end_time=data.end_time,
+            organization_id=data.organization_id,
+            exclude_event_id=event_id,
+        )
 
         event = await patch_event(session, event_id, data)
         if event is None:

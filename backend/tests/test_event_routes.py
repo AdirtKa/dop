@@ -9,7 +9,7 @@ import pytest
 
 from src.models import Event, EventHall, MediaFile, MediaKind, MediaStatus, User, UserRole
 from src.routes import event as event_routes
-from src.schemas.event import EventCreateRequest, EventMediaCreateRequest, EventMediaUpdateRequest
+from src.schemas.event import EventCreateRequest, EventMediaCreateRequest, EventMediaUpdateRequest, EventPatchRequest
 
 
 def make_event(*, organization_id: uuid.UUID | None = None) -> Event:
@@ -50,6 +50,7 @@ async def test_create_event_registers_media_as_pending_without_public_url(monkey
     attach_mock = AsyncMock(return_value=(event, media))
 
     monkeypatch.setattr(event_routes, "add_event", AsyncMock(return_value=event))
+    monkeypatch.setattr(event_routes, "has_event_time_conflict", AsyncMock(return_value=False))
     monkeypatch.setattr(event_routes, "attach_event_media", attach_mock)
     monkeypatch.setattr(
         event_routes,
@@ -94,6 +95,124 @@ async def test_create_event_registers_media_as_pending_without_public_url(monkey
     assert result.media[0].status == MediaStatus.pending
     attach_mock.assert_awaited_once()
     assert attach_mock.await_args.kwargs["public_url"] is None
+
+
+@pytest.mark.asyncio
+async def test_create_event_rejects_overlapping_time_for_other_organization(monkeypatch) -> None:
+    event = make_event()
+    add_event_mock = AsyncMock()
+    conflict_mock = AsyncMock(return_value=True)
+
+    monkeypatch.setattr(event_routes, "has_event_time_conflict", conflict_mock)
+    monkeypatch.setattr(event_routes, "add_event", add_event_mock)
+
+    with pytest.raises(HTTPException) as exc:
+        await event_routes.create_event(
+            session=object(),
+            event_data=EventCreateRequest(
+                name="Conference",
+                details="Internal details",
+                representative="Organizer representative",
+                responsible_name="Responsible Person",
+                responsible_contact="+7 999 000-00-00",
+                halls=[EventHall.large],
+                start_time=event.start_time,
+                end_time=event.end_time,
+                is_public=False,
+                organization_id=uuid.uuid4(),
+            ),
+            current_user=User(
+                id=uuid.uuid4(),
+                username="admin",
+                password_hash="hash",
+                role=UserRole.ADMIN,
+                is_active=True,
+            ),
+        )
+
+    assert exc.value.status_code == 409
+    assert exc.value.detail == "Event time is already occupied"
+    conflict_mock.assert_awaited_once()
+    add_event_mock.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_create_event_allows_overlapping_time_for_same_organization(monkeypatch) -> None:
+    organization_id = uuid.uuid4()
+    event = make_event(organization_id=organization_id)
+    add_event_mock = AsyncMock(return_value=event)
+    conflict_mock = AsyncMock(return_value=False)
+
+    monkeypatch.setattr(event_routes, "has_event_time_conflict", conflict_mock)
+    monkeypatch.setattr(event_routes, "add_event", add_event_mock)
+
+    result = await event_routes.create_event(
+        session=object(),
+        event_data=EventCreateRequest(
+            name="Conference",
+            details="Internal details",
+            representative="Organizer representative",
+            responsible_name="Responsible Person",
+            responsible_contact="+7 999 000-00-00",
+            halls=[EventHall.large],
+            start_time=event.start_time,
+            end_time=event.end_time,
+            is_public=False,
+            organization_id=organization_id,
+        ),
+        current_user=User(
+            id=uuid.uuid4(),
+            username="admin",
+            password_hash="hash",
+            role=UserRole.ADMIN,
+            is_active=True,
+        ),
+    )
+
+    assert result.id == event.id
+    conflict_mock.assert_awaited_once()
+    assert conflict_mock.await_args.kwargs["organization_id"] == organization_id
+    add_event_mock.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_update_event_rejects_overlapping_time_for_other_organization(monkeypatch) -> None:
+    event = make_event()
+    event_id = uuid.uuid4()
+    conflict_mock = AsyncMock(return_value=True)
+    patch_event_mock = AsyncMock()
+
+    monkeypatch.setattr(event_routes, "has_event_time_conflict", conflict_mock)
+    monkeypatch.setattr(event_routes, "patch_event", patch_event_mock)
+
+    with pytest.raises(HTTPException) as exc:
+        await event_routes.update_event(
+            session=object(),
+            event_id=event_id,
+            event_data=EventPatchRequest(
+                name="Conference",
+                details="Internal details",
+                representative="Organizer representative",
+                responsible_name="Responsible Person",
+                responsible_contact="+7 999 000-00-00",
+                halls=[EventHall.large],
+                start_time=event.start_time,
+                end_time=event.end_time,
+                is_public=False,
+                organization_id=uuid.uuid4(),
+            ),
+            current_user=User(
+                id=uuid.uuid4(),
+                username="admin",
+                password_hash="hash",
+                role=UserRole.ADMIN,
+                is_active=True,
+            ),
+        )
+
+    assert exc.value.status_code == 409
+    assert conflict_mock.await_args.kwargs["exclude_event_id"] == event_id
+    patch_event_mock.assert_not_awaited()
 
 
 @pytest.mark.asyncio

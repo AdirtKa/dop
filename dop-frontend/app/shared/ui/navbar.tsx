@@ -8,6 +8,7 @@ const navItems = [
     { label: "Главная", to: "/" },
     { label: "Наши\nсотрудники", to: "/employees" },
     { label: "События", to: "/events" },
+    { label: "Календарь", to: "/events-calendar", authOnly: true },
 ];
 
 export function Navbar() {
@@ -36,6 +37,8 @@ export function Navbar() {
             setPassword("");
         }
     }, [isAuthenticated]);
+
+    const visibleNavItems = navItems.filter((item) => !item.authOnly || isAuthenticated);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -75,7 +78,7 @@ export function Navbar() {
                 </button>
 
                 <div className="navbar__links">
-                    {navItems.map((item) => (
+                    {visibleNavItems.map((item) => (
                         <NavLink
                             key={item.to}
                             to={item.to}
@@ -170,7 +173,7 @@ export function Navbar() {
 
             {isMobileMenuOpen && (
                 <div className="navbar__mobile-menu">
-                    {navItems.map((item) => (
+                    {visibleNavItems.map((item) => (
                         <NavLink
                             key={item.to}
                             to={item.to}

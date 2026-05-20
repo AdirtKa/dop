@@ -81,6 +81,34 @@ async def add_event(
     return event
 
 
+async def has_event_time_conflict(
+    session: AsyncSession,
+    start_time: datetime,
+    end_time: datetime,
+    organization_id: UUID | None,
+    exclude_event_id: UUID | None = None,
+) -> bool:
+    conditions = [
+        Event.start_time < end_time,
+        Event.end_time > start_time,
+    ]
+
+    if organization_id is not None:
+        conditions.append(
+            or_(
+                Event.organization_id.is_(None),
+                Event.organization_id != organization_id,
+            )
+        )
+
+    if exclude_event_id is not None:
+        conditions.append(Event.id != exclude_event_id)
+
+    stmt = select(Event.id).where(and_(*conditions)).limit(1)
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none() is not None
+
+
 async def get_event_by_id(session: AsyncSession, event_id: uuid.UUID) -> Event | None:
     stmt = (
         select(Event)
