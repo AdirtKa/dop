@@ -198,6 +198,7 @@ async def create_event(
     return EventPutResponse(
         id=event.id,
         name=event.name,
+        hall=event.hall,
         start_time=event.start_time,
         end_time=event.end_time,
         details=event.details,

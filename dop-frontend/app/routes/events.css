@@ -61,7 +61,9 @@
     grid-column: 1 / -1;
 }
 
-.events-page__field input {
+.events-page__field input,
+.events-page__field select,
+.events-page__field textarea {
     min-width: 0;
     padding: 10px 12px;
 
@@ -69,11 +71,20 @@
     border-radius: 8px;
 
     color: var(--color-text);
+    font-family: inherit;
     font-size: 15px;
     background-color: #fff;
 }
 
-.events-page__field input:focus {
+.events-page__field textarea {
+    min-height: 96px;
+    resize: vertical;
+    line-height: 1.45;
+}
+
+.events-page__field input:focus,
+.events-page__field select:focus,
+.events-page__field textarea:focus {
     outline: none;
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px var(--color-primary-light);
@@ -272,12 +283,19 @@
 }
 
 .event-card__date,
-.event-card__organization {
+.event-card__organization,
+.event-card__details {
     margin: 0;
 
     color: var(--color-muted);
     font-size: 14px;
     line-height: 1.45;
+}
+
+.event-card__details {
+    margin-top: 8px;
+    max-width: 70ch;
+    white-space: pre-wrap;
 }
 
 .event-card__badge {

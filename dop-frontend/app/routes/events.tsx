@@ -10,7 +10,7 @@ import {
     updateEvent,
     updateEventMedia,
 } from "~/shared/api/event";
-import type { ApiMediaFile, EventItem, EventPayload } from "~/shared/api/types";
+import type { ApiEventHall, ApiMediaFile, EventItem, EventPayload } from "~/shared/api/types";
 import { useAuth } from "~/shared/auth/auth-context";
 import { MediaCarousel } from "~/shared/ui/media-carousel";
 import "./events.css";
@@ -21,12 +21,20 @@ type EventsLoaderData = {
 
 type EventFormState = {
     name: string;
+    details: string;
+    hall: ApiEventHall;
     startTime: string;
     endTime: string;
     isPublic: boolean;
 };
 
 const ALLOWED_EVENT_MEDIA_TYPES = ["image/jpeg", "image/png", "image/webp", "video/mp4", "video/webm"];
+
+const HALL_OPTIONS: Array<{ value: ApiEventHall; label: string }> = [
+    { value: "small", label: "Малый зал" },
+    { value: "buffet", label: "Фуршетный зал" },
+    { value: "large", label: "Большой зал" },
+];
 
 export async function clientLoader(): Promise<EventsLoaderData> {
     const events = await getEvents();
@@ -70,6 +78,8 @@ function createEmptyForm(): EventFormState {
 
     return {
         name: "",
+        details: "",
+        hall: "large",
         startTime: toDateTimeLocalValue(now.toISOString()),
         endTime: toDateTimeLocalValue(end.toISOString()),
         isPublic: false,
@@ -79,6 +89,8 @@ function createEmptyForm(): EventFormState {
 function createPayload(form: EventFormState): EventPayload {
     return {
         name: form.name.trim(),
+        details: form.details.trim(),
+        hall: form.hall,
         startTime: toApiDateTime(form.startTime),
         endTime: toApiDateTime(form.endTime),
         isPublic: form.isPublic,
@@ -177,6 +189,8 @@ function EventCard({
     const [isEditing, setIsEditing] = useState(false);
     const [form, setForm] = useState<EventFormState>({
         name: eventItem.name,
+        details: eventItem.details,
+        hall: eventItem.hall,
         startTime: toDateTimeLocalValue(eventItem.startTime),
         endTime: toDateTimeLocalValue(eventItem.endTime),
         isPublic: eventItem.isPublic,
@@ -209,6 +223,8 @@ function EventCard({
     function resetForm() {
         setForm({
             name: eventItem.name,
+            details: eventItem.details,
+            hall: eventItem.hall,
             startTime: toDateTimeLocalValue(eventItem.startTime),
             endTime: toDateTimeLocalValue(eventItem.endTime),
             isPublic: eventItem.isPublic,
@@ -310,6 +326,32 @@ function EventCard({
                         />
                     </label>
 
+                    <label className="events-page__field events-page__field--wide">
+                        <span>Описание</span>
+                        <textarea
+                            value={form.details}
+                            onChange={(event) => setForm((current) => ({ ...current, details: event.target.value }))}
+                            rows={4}
+                        />
+                    </label>
+
+                    <label className="events-page__field">
+                        <span>Зал</span>
+                        <select
+                            value={form.hall}
+                            onChange={(event) =>
+                                setForm((current) => ({ ...current, hall: event.target.value as ApiEventHall }))
+                            }
+                            required
+                        >
+                            {HALL_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+
                     <label className="events-page__field">
                         <span>Начало</span>
                         <input
@@ -371,6 +413,12 @@ function EventCard({
                     </p>
                     {eventItem.organization ? (
                         <p className="event-card__organization">{eventItem.organization.name}</p>
+                    ) : null}
+                    <p className="event-card__organization">
+                        {HALL_OPTIONS.find((option) => option.value === eventItem.hall)?.label ?? eventItem.hall}
+                    </p>
+                    {eventItem.details ? (
+                        <p className="event-card__details">{eventItem.details}</p>
                     ) : null}
                 </div>
 
@@ -656,6 +704,32 @@ export default function EventsPage() {
                                 onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
                                 required
                             />
+                        </label>
+
+                        <label className="events-page__field events-page__field--wide">
+                            <span>Описание</span>
+                            <textarea
+                                value={form.details}
+                                onChange={(event) => setForm((current) => ({ ...current, details: event.target.value }))}
+                                rows={4}
+                            />
+                        </label>
+
+                        <label className="events-page__field">
+                            <span>Зал</span>
+                            <select
+                                value={form.hall}
+                                onChange={(event) =>
+                                    setForm((current) => ({ ...current, hall: event.target.value as ApiEventHall }))
+                                }
+                                required
+                            >
+                                {HALL_OPTIONS.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
                         </label>
 
                         <label className="events-page__field">

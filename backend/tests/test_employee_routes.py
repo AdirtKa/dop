@@ -87,7 +87,7 @@ async def test_create_employee_with_photo_keeps_existing_flow(monkeypatch) -> No
     )
     monkeypatch.setattr(
         employee_routes,
-        "build_employee_photo_payload",
+        "build_media_payload",
         lambda **_: (
             "employees/generated.png",
             "https://s3.example.com/presigned",
@@ -136,7 +136,7 @@ async def test_update_employee_photo_attaches_photo_when_missing(monkeypatch) ->
     )
     monkeypatch.setattr(
         employee_routes,
-        "build_employee_photo_payload",
+        "build_media_payload",
         lambda **_: (
             "employees/generated.webp",
             "https://s3.example.com/presigned-photo",

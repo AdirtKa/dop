@@ -83,10 +83,13 @@ export type ApiOrganizationShort = {
     name: string;
 };
 
+export type ApiEventHall = "small" | "buffet" | "large";
+
 export type ApiEvent = {
     id: string;
     name: string;
     details?: string;
+    hall: ApiEventHall;
     start_time: string;
     end_time: string;
     is_public?: boolean;
@@ -112,6 +115,7 @@ export type ApiEventMutationResponse = ApiEvent & {
 export type EventPayload = {
     name: string;
     details: string;
+    hall: ApiEventHall;
     startTime: string;
     endTime: string;
     isPublic: boolean;
@@ -129,6 +133,7 @@ export type EventItem = {
     id: string;
     name: string;
     details: string;
+    hall: ApiEventHall;
     startTime: string;
     endTime: string;
     isPublic: boolean;

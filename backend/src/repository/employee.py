@@ -64,7 +64,9 @@ async def patch_employee(
     data: EmployeePatchRequest,
 ) -> Employee | None:
     """Обновляет измененные поля сотрудника и возвращает актуальную модель."""
-    employee = await session.get(Employee, employee_id)
+    stmt = select(Employee).where(Employee.id == employee_id).options(selectinload(Employee.photo))
+    result = await session.execute(stmt)
+    employee = result.scalars().first()
 
     if employee is None:
         return None

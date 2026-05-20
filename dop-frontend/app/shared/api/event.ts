@@ -41,9 +41,11 @@ function mapEvent(event: ApiEvent): EventItem {
     return {
         id: event.id,
         name: event.name,
+        details: event.details ?? "",
+        hall: event.hall,
         startTime: event.start_time,
         endTime: event.end_time,
-        isPublic: event.is_public,
+        isPublic: event.is_public ?? false,
         organization: event.organization,
         media: event.media,
     };
@@ -64,6 +66,8 @@ function withCacheBustedPublicUrl(media: ApiMediaFile): ApiMediaFile {
 function createEventBody(payload: EventPayload, mediaFiles: File[] = []) {
     return {
         name: payload.name,
+        details: payload.details,
+        hall: payload.hall,
         start_time: payload.startTime,
         end_time: payload.endTime,
         is_public: payload.isPublic,
@@ -144,6 +148,8 @@ export async function updateEvent(
         `/event/${eventId}`,
         createAuthorizedJsonInit("PATCH", accessToken, {
             name: payload.name,
+            details: payload.details,
+            hall: payload.hall,
             start_time: payload.startTime,
             end_time: payload.endTime,
             is_public: payload.isPublic,

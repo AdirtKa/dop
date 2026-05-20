@@ -7,7 +7,7 @@ import uuid
 from fastapi import HTTPException
 import pytest
 
-from src.models import Event, MediaFile, MediaKind, MediaStatus, User, UserRole
+from src.models import Event, EventHall, MediaFile, MediaKind, MediaStatus, User, UserRole
 from src.routes import event as event_routes
 from src.schemas.event import EventCreateRequest, EventMediaCreateRequest, EventMediaUpdateRequest
 
@@ -15,6 +15,8 @@ from src.schemas.event import EventCreateRequest, EventMediaCreateRequest, Event
 def make_event(*, organization_id: uuid.UUID | None = None) -> Event:
     event = Event(
         name="Conference",
+        details="Internal details",
+        hall=EventHall.large,
         start_time=datetime(2026, 5, 10, 10, 0, tzinfo=UTC),
         end_time=datetime(2026, 5, 10, 12, 0, tzinfo=UTC),
         is_public=False,
@@ -60,6 +62,8 @@ async def test_create_event_registers_media_as_pending_without_public_url(monkey
         session=object(),
         event_data=EventCreateRequest(
             name="Conference",
+            details="Internal details",
+            hall=EventHall.large,
             start_time=event.start_time,
             end_time=event.end_time,
             is_public=False,
@@ -75,6 +79,8 @@ async def test_create_event_registers_media_as_pending_without_public_url(monkey
     )
 
     assert result.upload_urls[0].presigned_url == "https://s3.example.com/presigned"
+    assert result.details == "Internal details"
+    assert result.hall == EventHall.large
     assert result.media[0].public_url is None
     assert result.media[0].status == MediaStatus.pending
     attach_mock.assert_awaited_once()
@@ -224,3 +230,92 @@ async def test_complete_event_media_upload_marks_media_failed_on_invalid_object(
     assert exc.value.status_code == 400
     assert exc.value.detail == "Uploaded media object is too large"
     failed_mock.assert_awaited_once_with(session, media)
+
+
+@pytest.mark.asyncio
+async def test_read_events_hides_extended_fields_for_anonymous_user(monkeypatch) -> None:
+    event = make_event()
+    get_events_mock = AsyncMock(return_value=[event])
+    monkeypatch.setattr(event_routes, "get_events", get_events_mock)
+
+    result = await event_routes.read_events(
+        session=object(),
+        current_user=None,
+        limit=10,
+        offset=0,
+    )
+
+    assert len(result) == 1
+    assert not hasattr(result[0], "details")
+    assert not hasattr(result[0], "is_public")
+    assert result[0].hall == EventHall.large
+    get_events_mock.assert_awaited_once()
+    assert get_events_mock.await_args.kwargs["is_public"] is True
+    assert get_events_mock.await_args.kwargs["is_finished"] is True
+
+
+@pytest.mark.asyncio
+async def test_read_events_returns_extended_fields_for_employee(monkeypatch) -> None:
+    event = make_event()
+    monkeypatch.setattr(event_routes, "get_events", AsyncMock(return_value=[event]))
+
+    result = await event_routes.read_events(
+        session=object(),
+        current_user=User(
+            id=uuid.uuid4(),
+            username="employee",
+            password_hash="hash",
+            role=UserRole.EMPLOYEE,
+            is_active=True,
+        ),
+        limit=10,
+        offset=0,
+    )
+
+    assert result[0].details == "Internal details"
+    assert result[0].is_public is False
+    assert result[0].hall == EventHall.large
+
+
+@pytest.mark.asyncio
+async def test_organization_cannot_modify_event_owned_by_other_organization(monkeypatch) -> None:
+    organization_id = uuid.uuid4()
+    other_organization_id = uuid.uuid4()
+    owner_mock = AsyncMock(return_value=other_organization_id)
+    monkeypatch.setattr(event_routes, "get_event_owner", owner_mock)
+
+    with pytest.raises(HTTPException) as exc:
+        await event_routes.ensure_event_write_access(
+            session=object(),
+            event_id=uuid.uuid4(),
+            current_user=User(
+                id=organization_id,
+                username="org",
+                password_hash="hash",
+                role=UserRole.ORGANIZATION,
+                is_active=True,
+            ),
+        )
+
+    assert exc.value.status_code == 403
+    owner_mock.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_admin_bypasses_event_owner_lookup(monkeypatch) -> None:
+    owner_mock = AsyncMock()
+    monkeypatch.setattr(event_routes, "get_event_owner", owner_mock)
+
+    await event_routes.ensure_event_write_access(
+        session=object(),
+        event_id=uuid.uuid4(),
+        current_user=User(
+            id=uuid.uuid4(),
+            username="admin",
+            password_hash="hash",
+            role=UserRole.ADMIN,
+            is_active=True,
+        ),
+    )
+
+    owner_mock.assert_not_awaited()

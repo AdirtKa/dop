@@ -18,6 +18,17 @@ class ExecuteResultStub:
     def scalar_one_or_none(self) -> Employee:
         return self.employee
 
+    def scalars(self) -> ExecuteScalarsStub:
+        return ExecuteScalarsStub(self.employee)
+
+
+class ExecuteScalarsStub:
+    def __init__(self, employee: Employee | None) -> None:
+        self.employee = employee
+
+    def first(self) -> Employee | None:
+        return self.employee
+
 
 class AddSessionStub:
     def __init__(self, added: list[Employee]) -> None:
@@ -72,7 +83,7 @@ async def test_patch_employee_updates_all_fields_and_refreshes_entity() -> None:
         "Session",
         (),
         {
-            "get": AsyncMock(return_value=employee),
+            "execute": AsyncMock(return_value=ExecuteResultStub(employee)),
             "commit": AsyncMock(),
             "refresh": AsyncMock(),
         },
@@ -99,7 +110,7 @@ async def test_patch_employee_returns_none_when_employee_is_missing() -> None:
         "Session",
         (),
         {
-            "get": AsyncMock(return_value=None),
+            "execute": AsyncMock(return_value=ExecuteResultStub(None)),
             "commit": AsyncMock(),
             "refresh": AsyncMock(),
         },

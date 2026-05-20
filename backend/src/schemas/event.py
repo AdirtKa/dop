@@ -4,6 +4,7 @@ import uuid
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from src.models import EventHall
 from src.schemas.mediafile import MediaFileRead
 
 
@@ -17,6 +18,7 @@ class OrganizationShortRead(BaseModel):
 class ReadEventResponse(BaseModel):
     id: uuid.UUID
     name: str
+    hall: EventHall
     start_time: datetime
     end_time: datetime
     organization: OrganizationShortRead | None
@@ -57,6 +59,7 @@ class EventMediaUpdateRequest(EventMediaCreateRequest):
 class EventCreateRequest(BaseModel):
     name: str
     details: str = ""
+    hall: EventHall = EventHall.large
     start_time: datetime
     end_time: datetime
     is_public: bool = False
@@ -78,6 +81,7 @@ class EventPutResponse(BaseModel):
     id: uuid.UUID
     name: str
     details: str
+    hall: EventHall
     start_time: datetime
     end_time: datetime
     is_public: bool
@@ -90,6 +94,7 @@ class EventPutResponse(BaseModel):
 class EventPatchRequest(BaseModel):
     name: str
     details: str
+    hall: EventHall
     start_time: datetime
     end_time: datetime
     is_public: bool

@@ -1,8 +1,9 @@
 from datetime import datetime
+from enum import StrEnum
 from typing import TYPE_CHECKING
 import uuid
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Text, func
+from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -13,6 +14,12 @@ if TYPE_CHECKING:
     from src.models.user import User
 
 
+class EventHall(StrEnum):
+    small = "small"
+    buffet = "buffet"
+    large = "large"
+
+
 class Event(Base):
     __tablename__ = "events"
 
@@ -20,6 +27,11 @@ class Event(Base):
 
     name: Mapped[str] = mapped_column(Text, nullable=False)
     details: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    hall: Mapped[EventHall] = mapped_column(
+        Enum(EventHall, name="event_hall"),
+        nullable=False,
+        default=EventHall.large,
+    )
 
     start_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     end_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

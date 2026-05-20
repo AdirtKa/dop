@@ -66,6 +66,7 @@ async def add_event(
     event = Event(
         name=event_data.name,
         details=event_data.details,
+        hall=event_data.hall,
         start_time=event_data.start_time,
         end_time=event_data.end_time,
         is_public=event_data.is_public,

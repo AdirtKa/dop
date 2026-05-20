@@ -85,6 +85,48 @@ async def test_get_current_user_rejects_inactive_user(monkeypatch, inactive_user
 
 
 @pytest.mark.asyncio
+async def test_get_optional_current_user_returns_none_for_inactive_user(
+    monkeypatch,
+    inactive_user,
+) -> None:
+    session = type("Session", (), {})()
+    session.get = AsyncMock(return_value=inactive_user)
+    monkeypatch.setattr(
+        auth_dependency,
+        "decode_access_token",
+        lambda token: {"sub": str(inactive_user.id), "type": "access"},
+    )
+
+    user = await auth_dependency.get_optional_current_user(
+        token="inactive-user-token",
+        session=session,
+    )
+
+    assert user is None
+
+
+@pytest.mark.asyncio
+async def test_get_optional_current_user_returns_none_for_refresh_token(
+    monkeypatch,
+) -> None:
+    session = type("Session", (), {})()
+    session.get = AsyncMock()
+    monkeypatch.setattr(
+        auth_dependency,
+        "decode_access_token",
+        lambda token: {"sub": str(uuid.uuid4()), "type": "refresh"},
+    )
+
+    user = await auth_dependency.get_optional_current_user(
+        token="refresh-token",
+        session=session,
+    )
+
+    assert user is None
+    session.get.assert_not_awaited()
+
+
+@pytest.mark.asyncio
 async def test_require_roles_allows_expected_role(active_user) -> None:
     checker = auth_dependency.require_roles(UserRole.ADMIN, UserRole.ORGANIZATION)
 
