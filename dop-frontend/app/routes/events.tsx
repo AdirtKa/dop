@@ -360,19 +360,32 @@ function EventCard({
 
                     <label className="events-page__field">
                         <span>Зал</span>
-                        <select
-                            value={form.halls[0] ?? "large"}
-                            onChange={(event) =>
-                                setForm((current) => ({ ...current, halls: [event.target.value as ApiEventHall] }))
-                            }
-                            required
-                        >
-                            {HALL_OPTIONS.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="events-page__hall-picker">
+                            {HALL_OPTIONS.map((option) => {
+                                const isSelected = form.halls.includes(option.value);
+
+                                return (
+                                    <button
+                                        key={option.value}
+                                        type="button"
+                                        className={
+                                            isSelected
+                                                ? "events-page__hall-chip events-page__hall-chip--active"
+                                                : "events-page__hall-chip"
+                                        }
+                                        onClick={() =>
+                                            setForm((current) => ({
+                                                ...current,
+                                                halls: toggleHallSelection(current.halls, option.value),
+                                            }))
+                                        }
+                                        aria-pressed={isSelected}
+                                    >
+                                        {option.label}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </label>
 
                     <label className="events-page__field">
@@ -779,19 +792,32 @@ export default function EventsPage() {
 
                         <label className="events-page__field">
                             <span>Зал</span>
-                            <select
-                                value={form.halls[0] ?? "large"}
-                                onChange={(event) =>
-                                    setForm((current) => ({ ...current, halls: [event.target.value as ApiEventHall] }))
-                                }
-                                required
-                            >
-                                {HALL_OPTIONS.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
+                            <div className="events-page__hall-picker">
+                                {HALL_OPTIONS.map((option) => {
+                                    const isSelected = form.halls.includes(option.value);
+
+                                    return (
+                                        <button
+                                            key={option.value}
+                                            type="button"
+                                            className={
+                                                isSelected
+                                                    ? "events-page__hall-chip events-page__hall-chip--active"
+                                                    : "events-page__hall-chip"
+                                            }
+                                            onClick={() =>
+                                                setForm((current) => ({
+                                                    ...current,
+                                                    halls: toggleHallSelection(current.halls, option.value),
+                                                }))
+                                            }
+                                            aria-pressed={isSelected}
+                                        >
+                                            {option.label}
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </label>
 
                         <label className="events-page__field">

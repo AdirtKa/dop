@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 import uuid
 
 from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, Text, func
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import ARRAY, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
@@ -27,10 +27,13 @@ class Event(Base):
 
     name: Mapped[str] = mapped_column(Text, nullable=False)
     details: Mapped[str] = mapped_column(Text, nullable=False, default="")
-    hall: Mapped[EventHall] = mapped_column(
-        Enum(EventHall, name="event_hall"),
+    representative: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    responsible_name: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    responsible_contact: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    halls: Mapped[list[EventHall]] = mapped_column(
+        ARRAY(Enum(EventHall, name="event_hall")),
         nullable=False,
-        default=EventHall.large,
+        default=lambda: [EventHall.large],
     )
 
     start_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

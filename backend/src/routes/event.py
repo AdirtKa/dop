@@ -198,10 +198,13 @@ async def create_event(
     return EventPutResponse(
         id=event.id,
         name=event.name,
-        hall=event.hall,
         start_time=event.start_time,
         end_time=event.end_time,
         details=event.details,
+        representative=event.representative,
+        responsible_name=event.responsible_name,
+        responsible_contact=event.responsible_contact,
+        halls=event.halls,
         is_public=event.is_public,
         organization=(
             OrganizationShortRead.model_validate(event.organization)

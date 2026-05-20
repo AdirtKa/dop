@@ -16,7 +16,10 @@ def make_event(*, organization_id: uuid.UUID | None = None) -> Event:
     event = Event(
         name="Conference",
         details="Internal details",
-        hall=EventHall.large,
+        representative="Organizer representative",
+        responsible_name="Responsible Person",
+        responsible_contact="+7 999 000-00-00",
+        halls=[EventHall.large],
         start_time=datetime(2026, 5, 10, 10, 0, tzinfo=UTC),
         end_time=datetime(2026, 5, 10, 12, 0, tzinfo=UTC),
         is_public=False,
@@ -63,7 +66,10 @@ async def test_create_event_registers_media_as_pending_without_public_url(monkey
         event_data=EventCreateRequest(
             name="Conference",
             details="Internal details",
-            hall=EventHall.large,
+            representative="Organizer representative",
+            responsible_name="Responsible Person",
+            responsible_contact="+7 999 000-00-00",
+            halls=[EventHall.large],
             start_time=event.start_time,
             end_time=event.end_time,
             is_public=False,
@@ -80,7 +86,10 @@ async def test_create_event_registers_media_as_pending_without_public_url(monkey
 
     assert result.upload_urls[0].presigned_url == "https://s3.example.com/presigned"
     assert result.details == "Internal details"
-    assert result.hall == EventHall.large
+    assert result.halls == [EventHall.large]
+    assert result.representative == "Organizer representative"
+    assert result.responsible_name == "Responsible Person"
+    assert result.responsible_contact == "+7 999 000-00-00"
     assert result.media[0].public_url is None
     assert result.media[0].status == MediaStatus.pending
     attach_mock.assert_awaited_once()
@@ -248,7 +257,7 @@ async def test_read_events_hides_extended_fields_for_anonymous_user(monkeypatch)
     assert len(result) == 1
     assert not hasattr(result[0], "details")
     assert not hasattr(result[0], "is_public")
-    assert result[0].hall == EventHall.large
+    assert result[0].halls == [EventHall.large]
     get_events_mock.assert_awaited_once()
     assert get_events_mock.await_args.kwargs["is_public"] is True
     assert get_events_mock.await_args.kwargs["is_finished"] is True
@@ -274,7 +283,7 @@ async def test_read_events_returns_extended_fields_for_employee(monkeypatch) -> 
 
     assert result[0].details == "Internal details"
     assert result[0].is_public is False
-    assert result[0].hall == EventHall.large
+    assert result[0].halls == [EventHall.large]
 
 
 @pytest.mark.asyncio

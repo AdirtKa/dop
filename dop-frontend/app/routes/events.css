@@ -136,6 +136,49 @@
     background-color: var(--color-primary);
 }
 
+.events-page__hall-picker {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    padding: 4px;
+
+    background-color: #eef4fb;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+}
+
+.events-page__hall-chip {
+    min-width: 0;
+    min-height: 40px;
+    padding: 8px 10px;
+
+    color: var(--color-muted);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 650;
+
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.events-page__hall-chip:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary-light);
+}
+
+.events-page__hall-chip--active {
+    color: #fff;
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.events-page__hall-chip--active:hover {
+    color: #fff;
+    background-color: var(--color-primary-hover);
+}
+
 .events-page__selected-files {
     grid-column: 1 / -1;
     display: flex;
@@ -598,5 +641,9 @@
 
     .events-page__filters .events-page__toggle {
         width: 100%;
+    }
+
+    .events-page__hall-picker {
+        grid-template-columns: 1fr;
     }
 }

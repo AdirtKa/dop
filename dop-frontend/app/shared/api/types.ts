@@ -89,7 +89,10 @@ export type ApiEvent = {
     id: string;
     name: string;
     details?: string;
-    hall: ApiEventHall;
+    representative: string;
+    responsible_name: string;
+    responsible_contact: string;
+    halls: ApiEventHall[];
     start_time: string;
     end_time: string;
     is_public?: boolean;
@@ -115,7 +118,10 @@ export type ApiEventMutationResponse = ApiEvent & {
 export type EventPayload = {
     name: string;
     details: string;
-    hall: ApiEventHall;
+    representative: string;
+    responsibleName: string;
+    responsibleContact: string;
+    halls: ApiEventHall[];
     startTime: string;
     endTime: string;
     isPublic: boolean;
@@ -133,7 +139,10 @@ export type EventItem = {
     id: string;
     name: string;
     details: string;
-    hall: ApiEventHall;
+    representative: string;
+    responsibleName: string;
+    responsibleContact: string;
+    halls: ApiEventHall[];
     startTime: string;
     endTime: string;
     isPublic: boolean;
