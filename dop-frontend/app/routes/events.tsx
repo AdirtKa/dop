@@ -22,7 +22,10 @@ type EventsLoaderData = {
 type EventFormState = {
     name: string;
     details: string;
-    hall: ApiEventHall;
+    representative: string;
+    responsibleName: string;
+    responsibleContact: string;
+    halls: ApiEventHall[];
     startTime: string;
     endTime: string;
     isPublic: boolean;
@@ -79,7 +82,10 @@ function createEmptyForm(): EventFormState {
     return {
         name: "",
         details: "",
-        hall: "large",
+        representative: "",
+        responsibleName: "",
+        responsibleContact: "",
+        halls: ["large"],
         startTime: toDateTimeLocalValue(now.toISOString()),
         endTime: toDateTimeLocalValue(end.toISOString()),
         isPublic: false,
@@ -90,11 +96,22 @@ function createPayload(form: EventFormState): EventPayload {
     return {
         name: form.name.trim(),
         details: form.details.trim(),
-        hall: form.hall,
+        representative: form.representative.trim(),
+        responsibleName: form.responsibleName.trim(),
+        responsibleContact: form.responsibleContact.trim(),
+        halls: form.halls.length > 0 ? form.halls : ["large"],
         startTime: toApiDateTime(form.startTime),
         endTime: toApiDateTime(form.endTime),
         isPublic: form.isPublic,
     };
+}
+
+function toggleHallSelection(halls: ApiEventHall[], hall: ApiEventHall): ApiEventHall[] {
+    if (halls.includes(hall)) {
+        return halls.filter((item) => item !== hall);
+    }
+
+    return [...halls, hall];
 }
 
 function getMediaItems(media: ApiMediaFile[], title: string) {
@@ -190,7 +207,10 @@ function EventCard({
     const [form, setForm] = useState<EventFormState>({
         name: eventItem.name,
         details: eventItem.details,
-        hall: eventItem.hall,
+        representative: eventItem.representative,
+        responsibleName: eventItem.responsibleName,
+        responsibleContact: eventItem.responsibleContact,
+        halls: eventItem.halls,
         startTime: toDateTimeLocalValue(eventItem.startTime),
         endTime: toDateTimeLocalValue(eventItem.endTime),
         isPublic: eventItem.isPublic,
@@ -224,7 +244,10 @@ function EventCard({
         setForm({
             name: eventItem.name,
             details: eventItem.details,
-            hall: eventItem.hall,
+            representative: eventItem.representative,
+            responsibleName: eventItem.responsibleName,
+            responsibleContact: eventItem.responsibleContact,
+            halls: eventItem.halls,
             startTime: toDateTimeLocalValue(eventItem.startTime),
             endTime: toDateTimeLocalValue(eventItem.endTime),
             isPublic: eventItem.isPublic,
@@ -338,9 +361,9 @@ function EventCard({
                     <label className="events-page__field">
                         <span>Зал</span>
                         <select
-                            value={form.hall}
+                            value={form.halls[0] ?? "large"}
                             onChange={(event) =>
-                                setForm((current) => ({ ...current, hall: event.target.value as ApiEventHall }))
+                                setForm((current) => ({ ...current, halls: [event.target.value as ApiEventHall] }))
                             }
                             required
                         >
@@ -415,7 +438,9 @@ function EventCard({
                         <p className="event-card__organization">{eventItem.organization.name}</p>
                     ) : null}
                     <p className="event-card__organization">
-                        {HALL_OPTIONS.find((option) => option.value === eventItem.hall)?.label ?? eventItem.hall}
+                        {eventItem.halls
+                            .map((hall) => HALL_OPTIONS.find((option) => option.value === hall)?.label ?? hall)
+                            .join(", ")}
                     </p>
                     {eventItem.details ? (
                         <p className="event-card__details">{eventItem.details}</p>
@@ -551,16 +576,53 @@ function EventCard({
 
 export default function EventsPage() {
     const { events: initialEvents } = useLoaderData<typeof clientLoader>();
-    const { accessToken, isAuthenticated, isEventManager, refreshUserSession } = useAuth();
+    const { accessToken, isAuthenticated, isEventManager, refreshUserSession, user } = useAuth();
     const [events, setEvents] = useState(initialEvents);
     const [form, setForm] = useState<EventFormState>(createEmptyForm);
     const [mediaFiles, setMediaFiles] = useState<File[]>([]);
     const [isCreating, setIsCreating] = useState(false);
     const [createError, setCreateError] = useState<string | null>(null);
+    const [showOwnEventsOnly, setShowOwnEventsOnly] = useState(false);
+
+    const isOrganization = user?.role === "organization";
+
+    useEffect(() => {
+        if (!accessToken || !isAuthenticated) {
+            return;
+        }
+
+        let isMounted = true;
+
+        getEvents(accessToken)
+            .then((freshEvents) => {
+                if (isMounted) {
+                    setEvents(freshEvents);
+                }
+            })
+            .catch(() => undefined);
+
+        return () => {
+            isMounted = false;
+        };
+    }, [accessToken, isAuthenticated]);
+
+    useEffect(() => {
+        if (!isOrganization) {
+            setShowOwnEventsOnly(false);
+        }
+    }, [isOrganization]);
+
+    const visibleEvents = useMemo(
+        () =>
+            showOwnEventsOnly && user
+                ? events.filter((eventItem) => eventItem.organization?.id === user.id)
+                : events,
+        [events, showOwnEventsOnly, user],
+    );
 
     const sortedEvents = useMemo(
-        () => [...events].sort((left, right) => new Date(right.startTime).getTime() - new Date(left.startTime).getTime()),
-        [events],
+        () => [...visibleEvents].sort((left, right) => new Date(right.startTime).getTime() - new Date(left.startTime).getTime()),
+        [visibleEvents],
     );
 
     async function runAuthorized<T>(action: (token: string) => Promise<T>): Promise<T> {
@@ -718,9 +780,9 @@ export default function EventsPage() {
                         <label className="events-page__field">
                             <span>Зал</span>
                             <select
-                                value={form.hall}
+                                value={form.halls[0] ?? "large"}
                                 onChange={(event) =>
-                                    setForm((current) => ({ ...current, hall: event.target.value as ApiEventHall }))
+                                    setForm((current) => ({ ...current, halls: [event.target.value as ApiEventHall] }))
                                 }
                                 required
                             >
@@ -793,6 +855,30 @@ export default function EventsPage() {
                         </button>
                     </form>
                 </section>
+            ) : null}
+
+            {isOrganization ? (
+                <div className="events-page__filters">
+                    <span>Показывать</span>
+                    <div className="events-page__toggle" role="group" aria-label="Фильтр мероприятий организации">
+                        <button
+                            type="button"
+                            className={!showOwnEventsOnly ? "events-page__toggle-option active" : "events-page__toggle-option"}
+                            onClick={() => setShowOwnEventsOnly(false)}
+                            aria-pressed={!showOwnEventsOnly}
+                        >
+                            Все
+                        </button>
+                        <button
+                            type="button"
+                            className={showOwnEventsOnly ? "events-page__toggle-option active" : "events-page__toggle-option"}
+                            onClick={() => setShowOwnEventsOnly(true)}
+                            aria-pressed={showOwnEventsOnly}
+                        >
+                            Ваши мероприятия
+                        </button>
+                    </div>
+                </div>
             ) : null}
 
             <div className="events-page__list">

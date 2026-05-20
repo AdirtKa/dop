@@ -106,8 +106,11 @@ async function uploadAndCompleteEventMedia(
     return withCacheBustedPublicUrl(completed);
 }
 
-export async function getEvents(): Promise<EventItem[]> {
-    const events = await apiRequest<ApiEvent[]>("/event/");
+export async function getEvents(accessToken?: string): Promise<EventItem[]> {
+    const events = await apiRequest<ApiEvent[]>(
+        "/event/",
+        accessToken ? createAuthorizedJsonInit("GET", accessToken) : undefined,
+    );
 
     return events.map(mapEvent);
 }

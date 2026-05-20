@@ -239,6 +239,21 @@
     font-size: 13px;
 }
 
+.events-page__filters {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 16px;
+
+    color: var(--color-muted);
+    font-size: 13px;
+}
+
+.events-page__filters .events-page__toggle {
+    width: min(100%, 340px);
+}
+
 .events-page__list {
     display: flex;
     flex-direction: column;
@@ -574,5 +589,14 @@
 
     .event-card__badge {
         width: fit-content;
+    }
+
+    .events-page__filters {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .events-page__filters .events-page__toggle {
+        width: 100%;
     }
 }
