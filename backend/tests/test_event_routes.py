@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+# ruff: noqa: S106
 from datetime import UTC, datetime
 from unittest.mock import AsyncMock
 import uuid
@@ -9,7 +10,12 @@ import pytest
 
 from src.models import Event, EventHall, MediaFile, MediaKind, MediaStatus, User, UserRole
 from src.routes import event as event_routes
-from src.schemas.event import EventCreateRequest, EventMediaCreateRequest, EventMediaUpdateRequest, EventPatchRequest
+from src.schemas.event import (
+    EventCreateRequest,
+    EventMediaCreateRequest,
+    EventMediaUpdateRequest,
+    EventPatchRequest,
+)
 
 
 def make_event(*, organization_id: uuid.UUID | None = None) -> Event:

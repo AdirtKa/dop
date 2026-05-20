@@ -17,13 +17,13 @@ router = APIRouter()
 session_dependency = Annotated[AsyncSession, Depends(get_session)]
 
 
-@router.post("/login", response_model=LoginResponse)
+@router.post("/login")
 async def login(
     data: LoginRequest,
     request: Request,
     response: Response,
     session: session_dependency,
-):
+) -> LoginResponse:
     """Обрабатывает вход пользователя по логину и паролю."""
     return await login_user(
         session=session,
@@ -34,12 +34,12 @@ async def login(
     )
 
 
-@router.post("/refresh", response_model=TokenResponse)
+@router.post("/refresh")
 async def refresh(
     request: Request,
     response: Response,
     session: session_dependency,
-):
+) -> TokenResponse:
     """Обновляет access-token и выполняет ротацию refresh-token."""
     return await refresh_tokens(
         session=session,
@@ -53,7 +53,7 @@ async def logout(
     request: Request,
     response: Response,
     session: session_dependency,
-):
+) -> dict[str, str]:
     """Завершает текущую refresh-сессию пользователя."""
     return await logout_user(
         session=session,

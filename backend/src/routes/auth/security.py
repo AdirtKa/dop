@@ -97,11 +97,11 @@ def get_refresh_expires_at() -> datetime:
     return utc_now() + timedelta(seconds=settings.jwt_refresh_expires)
 
 
-def verify_password(plain_password, hashed_password):
+def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Проверяет пароль по сохранённому хешу."""
     return password_hash.verify(plain_password, hashed_password)
 
 
-def get_password_hash(password):
+def get_password_hash(password: str) -> str:
     """Строит хеш пароля для сохранения в базе данных."""
     return password_hash.hash(password)

@@ -9,6 +9,8 @@ from src.schemas.mediafile import MediaFileRead
 
 
 class OrganizationShortRead(BaseModel):
+    """Краткое представление организации, связанной с мероприятием."""
+
     id: uuid.UUID
     name: str = Field(validation_alias=AliasChoices("full_name", "username", "name"))
 
@@ -16,6 +18,8 @@ class OrganizationShortRead(BaseModel):
 
 
 class ReadEventResponse(BaseModel):
+    """Публичная схема чтения мероприятия без служебных деталей."""
+
     id: uuid.UUID
     name: str
     representative: str
@@ -31,6 +35,8 @@ class ReadEventResponse(BaseModel):
 
 
 class ExtendedReadEventResponse(ReadEventResponse):
+    """Расширенная схема чтения мероприятия для сотрудников, админов и владельцев."""
+
     details: str
     is_public: bool
 
@@ -45,21 +51,28 @@ ALLOWED_EVENT_MEDIA_TYPES = {
 
 
 class EventMediaCreateRequest(BaseModel):
+    """Запрос на подготовку медиафайла мероприятия к загрузке."""
+
     filename: str
     content_type: str
 
     @model_validator(mode="after")
     def validate_content_type(self) -> Self:
+        """Проверяет, что MIME-тип медиа разрешен для мероприятий."""
         if self.content_type not in ALLOWED_EVENT_MEDIA_TYPES:
             raise ValueError("Недопустимый тип файла")
         return self
 
 
 class EventMediaUpdateRequest(EventMediaCreateRequest):
+    """Запрос на повторную загрузку существующего медиафайла мероприятия."""
+
     pass
 
 
 class EventCreateRequest(BaseModel):
+    """Запрос на создание мероприятия."""
+
     name: str
     details: str = ""
     representative: str = ""
@@ -74,16 +87,22 @@ class EventCreateRequest(BaseModel):
 
 
 class EventMediaUploadResponse(BaseModel):
+    """Ответ с медиафайлом и presigned URL для загрузки в объектное хранилище."""
+
     media_file: MediaFileRead
     presigned_url: str
 
 
 class EventMediaUploadError(BaseModel):
+    """Описание ошибки подготовки отдельного медиафайла мероприятия."""
+
     filename: str
     detail: str
 
 
 class EventPutResponse(BaseModel):
+    """Ответ создания мероприятия с результатами подготовки медиафайлов."""
+
     id: uuid.UUID
     name: str
     details: str
@@ -101,6 +120,8 @@ class EventPutResponse(BaseModel):
 
 
 class EventPatchRequest(BaseModel):
+    """Запрос на полное обновление редактируемых полей мероприятия."""
+
     name: str
     details: str
     representative: str
@@ -114,4 +135,6 @@ class EventPatchRequest(BaseModel):
 
 
 class EventVisibilityPatchRequest(BaseModel):
+    """Запрос на изменение публичности мероприятия."""
+
     is_public: bool

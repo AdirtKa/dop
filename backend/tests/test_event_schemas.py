@@ -10,8 +10,8 @@ from src.schemas.event import (
     EventCreateRequest,
     EventPatchRequest,
     ExtendedReadEventResponse,
-    ReadEventResponse,
     OrganizationShortRead,
+    ReadEventResponse,
 )
 
 

@@ -1,5 +1,6 @@
 """Зависимости аутентификации и проверки ролей."""
 
+from collections.abc import Awaitable, Callable
 from typing import Annotated
 import uuid
 
@@ -82,7 +83,7 @@ async def get_optional_current_user(
     return user
 
 
-def require_roles(*allowed_roles: UserRole):
+def require_roles(*allowed_roles: UserRole) -> Callable[..., Awaitable[User]]:
     """Создаёт dependency, ограничивающую доступ указанными ролями."""
 
     async def checker(

@@ -42,7 +42,7 @@ STORAGE_PREFIX: str = "employees"
 
 
 @router.get("/", response_model=list[EmployeeRead])
-async def read_employees(session: session_dependency):
+async def read_employees(session: session_dependency) -> list[Employee]:
     """Возвращает список сотрудников для клиентского каталога."""
     try:
         employees = await get_employees(session)
@@ -57,12 +57,12 @@ async def read_employees(session: session_dependency):
         ) from exc
 
 
-@router.post("/", response_model=EmployeePutResponse)
+@router.post("/")
 async def create_employee(
     session: session_dependency,
     employee_data: EmployeeCreateRequest,
     _: Annotated[User, Depends(require_admin)],
-):
+) -> EmployeePutResponse:
     """Создает сотрудника в базе данных и возвращает его."""
 
     try:
@@ -119,7 +119,7 @@ async def update_employee(
     employee_id: uuid.UUID,
     employee_data: EmployeePatchRequest,
     _: Annotated[User, Depends(require_admin)],
-):
+) -> Employee:
     """Обновляет текстовые поля сотрудника по идентификатору."""
     try:
         employee = await patch_employee(session, employee_id, employee_data)
@@ -140,13 +140,13 @@ async def update_employee(
         ) from exc
 
 
-@router.put("/{employee_id}/photo", response_model=EmployeePutResponse)
+@router.put("/{employee_id}/photo")
 async def update_employee_photo(
     session: session_dependency,
     employee_id: uuid.UUID,
     employee_data: EmployeePhotoUpdateRequest,
     _: Annotated[User, Depends(require_admin)],
-):
+) -> EmployeePutResponse:
     """Готовит обновление фотографии сотрудника и возвращает URL загрузки."""
     try:
         if employee_data.content_type not in ALLOWED_IMAGE_TYPES:

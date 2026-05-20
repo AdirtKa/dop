@@ -15,12 +15,16 @@ if TYPE_CHECKING:
 
 
 class EventHall(StrEnum):
+    """Перечисление доступных залов для проведения мероприятия."""
+
     small = "small"
     buffet = "buffet"
     large = "large"
 
 
 class Event(Base):
+    """ORM-модель мероприятия с расписанием, организацией и медиафайлами."""
+
     __tablename__ = "events"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)

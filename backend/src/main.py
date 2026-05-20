@@ -1,8 +1,9 @@
 """Точка входа FastAPI-приложения и настройка middleware."""
 
+from collections.abc import Awaitable, Callable
 import time
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 import uvicorn
@@ -41,7 +42,10 @@ app.include_router(root_router, prefix="")
 
 
 @app.middleware("http")
-async def log_requests(request, call_next):
+async def log_requests(
+    request: Request,
+    call_next: Callable[[Request], Awaitable[Response]],
+) -> Response:
     """Пишет каждое обращение к API в access.log."""
     started_at = time.perf_counter()
     client_ip = get_request_client(request)
@@ -72,7 +76,7 @@ async def log_requests(request, call_next):
 
 
 @app.exception_handler(Exception)
-async def unhandled_exception_handler(request, exc):
+async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONResponse:
     """Логирует неожиданные исключения и возвращает 500 без внутренностей."""
     error_logger.exception(
         'Unhandled error during %s "%s" from client=%s',

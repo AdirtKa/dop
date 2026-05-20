@@ -41,7 +41,8 @@ def build_media_payload(
     return storage_key, presigned_url, public_url
 
 
-def get_presigned_put_url(bucket_name, object_name) -> str:
+def get_presigned_put_url(bucket_name: str, object_name: str) -> str:
+    """Возвращает временный URL для прямой загрузки объекта в S3-совместимое хранилище."""
     upload_url: str = minio_client.get_presigned_url(
         bucket_name=bucket_name,
         object_name=object_name,
@@ -58,6 +59,7 @@ def validate_uploaded_media_object(
     allowed_content_types: set[str],
     max_size_bytes: int,
 ) -> None:
+    """Проверяет наличие, размер и MIME-тип загруженного медиаобъекта."""
     try:
         stat = minio_client.stat_object(settings.s3_bucket_name, storage_key)
     except S3Error as exc:

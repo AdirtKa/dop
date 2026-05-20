@@ -19,6 +19,8 @@ class MediaKind(enum.StrEnum):
 
 
 class MediaStatus(enum.StrEnum):
+    """Перечисление состояний загрузки и проверки медиафайла."""
+
     pending = "pending"
     ready = "ready"
     failed = "failed"

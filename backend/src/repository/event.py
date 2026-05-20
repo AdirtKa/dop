@@ -20,6 +20,7 @@ async def get_events(
     organization_id: UUID | None = None,
     include_own_events: bool = False,
 ) -> list[Event]:
+    """Возвращает мероприятия с фильтрами публичности, завершенности и владения организацией."""
     days_delay = 1
 
     stmt = (
@@ -63,6 +64,7 @@ async def add_event(
     session: AsyncSession,
     event_data: EventCreateRequest,
 ) -> Event:
+    """Создает мероприятие из входной схемы и сохраняет его в базе данных."""
     event = Event(
         name=event_data.name,
         details=event_data.details,
@@ -88,6 +90,7 @@ async def has_event_time_conflict(
     organization_id: UUID | None,
     exclude_event_id: UUID | None = None,
 ) -> bool:
+    """Проверяет, пересекается ли время мероприятия с чужими мероприятиями."""
     conditions = [
         Event.start_time < end_time,
         Event.end_time > start_time,
@@ -110,6 +113,7 @@ async def has_event_time_conflict(
 
 
 async def get_event_by_id(session: AsyncSession, event_id: uuid.UUID) -> Event | None:
+    """Возвращает мероприятие по идентификатору вместе с медиа и организацией."""
     stmt = (
         select(Event)
         .where(Event.id == event_id)
@@ -121,6 +125,7 @@ async def get_event_by_id(session: AsyncSession, event_id: uuid.UUID) -> Event |
 
 
 async def delete_event_by_id(session: AsyncSession, event_id: uuid.UUID) -> bool:
+    """Удаляет мероприятие по идентификатору и сообщает, было ли оно найдено."""
     event = await session.get(Event, event_id)
     if event is None:
         return False
@@ -136,6 +141,7 @@ async def patch_event(
     event_id: uuid.UUID,
     event_data: EventPatchRequest,
 ) -> Event | None:
+    """Обновляет поля мероприятия и возвращает актуальную модель с зависимостями."""
     event = await session.get(Event, event_id)
 
     if event is None:
@@ -159,6 +165,7 @@ async def patch_event(
 
 
 async def change_visibility(session: AsyncSession, event_id: uuid.UUID, is_public: bool) -> bool:
+    """Меняет признак публичности мероприятия."""
     event = await session.get(Event, event_id)
     if event is None:
         return False
@@ -170,6 +177,7 @@ async def change_visibility(session: AsyncSession, event_id: uuid.UUID, is_publi
 
 
 async def get_event_owner(session: AsyncSession, event_id: uuid.UUID) -> UUID | None:
+    """Возвращает идентификатор организации-владельца мероприятия."""
     event = await session.get(Event, event_id)
     if event is None:
         return None
@@ -182,6 +190,7 @@ async def get_event_media(
     event_id: uuid.UUID,
     media_id: uuid.UUID,
 ) -> MediaFile | None:
+    """Возвращает медиафайл, привязанный к указанному мероприятию."""
     stmt = (
         select(MediaFile)
         .join(event_media, event_media.c.media_file_id == MediaFile.id)
@@ -195,6 +204,7 @@ async def get_event_media(
 
 
 async def mark_event_media_ready(session: AsyncSession, media: MediaFile) -> MediaFile:
+    """Помечает медиа мероприятия как загруженное и выставляет публичный URL."""
     media.status = MediaStatus.ready
     media.public_url = f"{settings.s3_public_url}/{media.storage_key}"
 
@@ -205,6 +215,7 @@ async def mark_event_media_ready(session: AsyncSession, media: MediaFile) -> Med
 
 
 async def mark_event_media_failed(session: AsyncSession, media: MediaFile) -> None:
+    """Помечает медиа мероприятия как не прошедшее проверку загрузки."""
     media.status = MediaStatus.failed
     await session.commit()
 
@@ -215,6 +226,7 @@ async def update_event_media_upload_data(
     mime_type: str,
     media_kind: MediaKind,
 ) -> MediaFile:
+    """Сбрасывает состояние медиа для повторной загрузки с новым MIME-типом."""
     media.mime_type = mime_type
     media.kind = media_kind
     media.status = MediaStatus.pending
@@ -231,6 +243,7 @@ async def delete_event_media(
     event_id: uuid.UUID,
     media_id: uuid.UUID,
 ) -> bool:
+    """Удаляет медиафайл мероприятия и сообщает, был ли он найден."""
     media = await get_event_media(session, event_id, media_id)
     if media is None:
         return False

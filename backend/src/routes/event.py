@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated
 import uuid
 
@@ -68,6 +69,7 @@ async def ensure_event_write_access(
     event_id: uuid.UUID,
     current_user: User,
 ) -> None:
+    """Проверяет, что организация изменяет только свои мероприятия."""
     if current_user.role != UserRole.ORGANIZATION:
         return
 
@@ -81,11 +83,12 @@ async def ensure_event_write_access(
 
 async def ensure_event_time_is_available(
     session: session_dependency,
-    start_time,
-    end_time,
+    start_time: datetime,
+    end_time: datetime,
     organization_id: uuid.UUID | None,
     exclude_event_id: uuid.UUID | None = None,
 ) -> None:
+    """Проверяет корректность интервала и отсутствие конфликтов с чужими мероприятиями."""
     if end_time <= start_time:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -112,7 +115,8 @@ async def read_events(
     current_user: Annotated[User | None, Depends(get_optional_current_user)],
     limit: Annotated[int, Query(ge=1, le=100)] = 10,
     offset: Annotated[int, Query(ge=0)] = 0,
-):
+) -> list[ExtendedReadEventResponse | ReadEventResponse]:
+    """Возвращает список мероприятий с учетом роли текущего пользователя."""
     try:
         if current_user is None:
             events = await get_events(
@@ -154,12 +158,13 @@ async def read_events(
         ) from exc
 
 
-@router.post("/", response_model=EventPutResponse)
+@router.post("/")
 async def create_event(
     session: session_dependency,
     event_data: EventCreateRequest,
     current_user: Annotated[User, Depends(require_event_manager)],
-):
+) -> EventPutResponse:
+    """Создает мероприятие и подготавливает ссылки для загрузки его медиафайлов."""
     try:
         data = event_data.model_copy()
 
@@ -258,7 +263,8 @@ async def update_event(
     event_id: uuid.UUID,
     event_data: EventPatchRequest,
     current_user: Annotated[User, Depends(require_event_manager)],
-):
+) -> Event:
+    """Обновляет мероприятие после проверки прав и занятости времени."""
     try:
         await ensure_event_write_access(session, event_id, current_user)
 
@@ -298,6 +304,7 @@ async def delete_event(
     event_id: uuid.UUID,
     current_user: Annotated[User, Depends(require_event_manager)],
 ) -> None:
+    """Удаляет мероприятие после проверки прав доступа."""
     try:
         await ensure_event_write_access(session, event_id, current_user)
 
@@ -317,13 +324,14 @@ async def delete_event(
         ) from exc
 
 
-@router.post("/{event_id}/media", response_model=EventMediaUploadResponse)
+@router.post("/{event_id}/media")
 async def add_event_media_upload(
     session: session_dependency,
     event_id: uuid.UUID,
     media_data: EventMediaCreateRequest,
     current_user: Annotated[User, Depends(require_event_manager)],
-):
+) -> EventMediaUploadResponse:
+    """Создает запись медиа мероприятия и возвращает presigned URL для загрузки."""
     try:
         await ensure_event_write_access(session, event_id, current_user)
 
@@ -361,14 +369,15 @@ async def add_event_media_upload(
         ) from exc
 
 
-@router.put("/{event_id}/media/{media_id}", response_model=EventMediaUploadResponse)
+@router.put("/{event_id}/media/{media_id}")
 async def update_event_media_upload(
     session: session_dependency,
     event_id: uuid.UUID,
     media_id: uuid.UUID,
     media_data: EventMediaUpdateRequest,
     current_user: Annotated[User, Depends(require_event_manager)],
-):
+) -> EventMediaUploadResponse:
+    """Готовит существующее медиа мероприятия к повторной загрузке."""
     try:
         await ensure_event_write_access(session, event_id, current_user)
 
@@ -408,6 +417,7 @@ async def delete_event_media_upload(
     media_id: uuid.UUID,
     current_user: Annotated[User, Depends(require_event_manager)],
 ) -> None:
+    """Удаляет медиафайл мероприятия после проверки прав доступа."""
     try:
         await ensure_event_write_access(session, event_id, current_user)
 
@@ -427,13 +437,14 @@ async def delete_event_media_upload(
         ) from exc
 
 
-@router.post("/{event_id}/media/{media_id}/complete", response_model=MediaFileRead)
+@router.post("/{event_id}/media/{media_id}/complete")
 async def complete_event_media_upload(
     session: session_dependency,
     event_id: uuid.UUID,
     media_id: uuid.UUID,
     current_user: Annotated[User, Depends(require_event_manager)],
-):
+) -> MediaFileRead:
+    """Завершает загрузку медиа мероприятия и валидирует объект в хранилище."""
     try:
         await ensure_event_write_access(session, event_id, current_user)
 
@@ -480,7 +491,8 @@ async def update_event_visibility(
     event_id: uuid.UUID,
     event_data: EventVisibilityPatchRequest,
     current_user: Annotated[User, Depends(require_event_manager)],
-):
+) -> dict[str, int | str]:
+    """Обновляет признак публичности мероприятия."""
     try:
         await ensure_event_write_access(session, event_id, current_user)
 
