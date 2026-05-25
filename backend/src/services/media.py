@@ -1,4 +1,5 @@
 from datetime import timedelta
+from urllib.parse import urlsplit, urlunsplit
 import uuid
 
 from minio import Minio
@@ -49,7 +50,28 @@ def get_presigned_put_url(bucket_name: str, object_name: str) -> str:
         expires=timedelta(minutes=15),
         method="PUT",
     )
-    return upload_url
+    return replace_presigned_url_base(upload_url)
+
+
+def replace_presigned_url_base(upload_url: str) -> str:
+    if not settings.s3_presigned_url_base:
+        return upload_url
+
+    parsed_upload_url = urlsplit(upload_url)
+    parsed_public_base = urlsplit(settings.s3_presigned_url_base.rstrip("/"))
+
+    if not parsed_public_base.scheme or not parsed_public_base.netloc:
+        return upload_url
+
+    return urlunsplit(
+        (
+            parsed_public_base.scheme,
+            parsed_public_base.netloc,
+            parsed_upload_url.path,
+            parsed_upload_url.query,
+            parsed_upload_url.fragment,
+        )
+    )
 
 
 def validate_uploaded_media_object(

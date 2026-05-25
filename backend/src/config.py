@@ -76,6 +76,11 @@ class Settings(BaseSettings):
         alias="S3_PUBLIC_URL",
     )
 
+    s3_presigned_url_base: str | None = Field(
+        default=None,
+        alias="S3_PRESIGNED_URL_BASE",
+    )
+
     max_event_media_size_bytes: int = Field(
         default=50 * 1024 * 1024,
         alias="MAX_EVENT_MEDIA_SIZE_BYTES",

@@ -14,6 +14,27 @@ class StatObjectStub:
     content_type: str | None
 
 
+def test_replace_presigned_url_base_keeps_path_and_signature(monkeypatch) -> None:
+    monkeypatch.setattr(
+        media_service.settings,
+        "s3_presigned_url_base",
+        "http://127.0.0.1:9000",
+    )
+
+    result = media_service.replace_presigned_url_base(
+        "http://minio:9000/dop-media/photo.jpg?X-Amz-Signature=abc"
+    )
+
+    assert result == "http://127.0.0.1:9000/dop-media/photo.jpg?X-Amz-Signature=abc"
+
+
+def test_replace_presigned_url_base_returns_original_without_public_base(monkeypatch) -> None:
+    upload_url = "http://minio:9000/dop-media/photo.jpg?X-Amz-Signature=abc"
+    monkeypatch.setattr(media_service.settings, "s3_presigned_url_base", None)
+
+    assert media_service.replace_presigned_url_base(upload_url) == upload_url
+
+
 def test_validate_uploaded_media_object_accepts_expected_file(monkeypatch) -> None:
     monkeypatch.setattr(
         media_service.minio_client,

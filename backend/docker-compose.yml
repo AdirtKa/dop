@@ -1,18 +1,66 @@
 services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: dop_api
+    env_file:
+      - .env
+    environment:
+      APP_MODULE: src.main:app
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      UVICORN_RELOAD: "false"
+      DATABASE_URL: "postgresql+asyncpg://postgres:adirtka_kettle@db:5432/dop"
+      S3_ENDPOINT_URL: "http://minio:9000"
+      S3_ACCESS_KEY: dop_adirtka
+      S3_SECRET_KEY: dop_adirtka_kettle
+      S3_PUBLIC_URL: "http://127.0.0.1:9000/dop-media"
+    volumes:
+      - api_logs:/app/logs
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2).read()",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   db:
     image: postgres:16
     container_name: dop_postgres
-    command: [ "postgres", "-c", "listen_addresses=*", "-c", "password_encryption=scram-sha-256" ]
+    command:
+      [
+        "postgres",
+        "-c",
+        "listen_addresses=*",
+        "-c",
+        "password_encryption=scram-sha-256",
+        "-c",
+        "hba_file=/etc/postgresql/pg_hba.conf",
+      ]
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-dop}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: adirtka_kettle
+      POSTGRES_DB: dop
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
     ports:
       - "127.0.0.1:5434:5432"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d dop" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -30,11 +78,12 @@ services:
       - "127.0.0.1:9000:9000"
       - "127.0.0.1:9001:9001"
     healthcheck:
-      test: [ "CMD-SHELL", "wget -q -O - http://127.0.0.1:9000/minio/health/live >/dev/null 2>&1 || exit 1" ]
+      test: [ "CMD-SHELL", "curl -f http://127.0.0.1:9000/minio/health/live >/dev/null 2>&1 || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
 volumes:
+  api_logs:
   postgres_data:
   minio_data:
