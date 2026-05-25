@@ -1,0 +1,141 @@
+services:
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: dop_nginx
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_started
+      minio:
+        condition: service_healthy
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "127.0.0.1:80:80"
+
+  frontend:
+    build:
+      context: ./dop-frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: /api
+    container_name: dop_frontend
+    expose:
+      - "80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: docker/Dockerfile
+    container_name: dop_backend
+    env_file:
+      - ./backend/.env
+    environment:
+      APP_MODULE: src.main:app
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      API_PREFIX: /api
+      UVICORN_RELOAD: "false"
+      DATABASE_URL: "postgresql+asyncpg://postgres:adirtka_kettle@db:5432/dop"
+      S3_ENDPOINT_URL: "http://minio:9000"
+      S3_ACCESS_KEY: dop_adirtka
+      S3_SECRET_KEY: dop_adirtka_kettle
+      S3_BUCKET_NAME: dop-media
+      S3_PUBLIC_URL: "http://127.0.0.1/media/dop-media"
+      S3_PRESIGNED_URL_BASE: "http://127.0.0.1:9000"
+    volumes:
+      - backend_logs:/app/logs
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      minio-policy:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2).read()",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  db:
+    image: postgres:16
+    container_name: dop_postgres
+    command:
+      [
+        "postgres",
+        "-c",
+        "listen_addresses=*",
+        "-c",
+        "password_encryption=scram-sha-256",
+        "-c",
+        "hba_file=/etc/postgresql/pg_hba.conf",
+      ]
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: adirtka_kettle
+      POSTGRES_DB: dop
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/docker/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+    ports:
+      - "127.0.0.1:5434:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d dop" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    container_name: dop_minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: dop_adirtka
+      MINIO_ROOT_PASSWORD: dop_adirtka_kettle
+    volumes:
+      - minio_data:/data
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://127.0.0.1:9000/minio/health/live >/dev/null 2>&1 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio-policy:
+    image: minio/mc:latest
+    container_name: dop_minio_policy
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint:
+      [
+        "/bin/sh",
+        "-c",
+        "until mc alias set local http://minio:9000 dop_adirtka dop_adirtka_kettle; do sleep 2; done; while true; do mc mb --ignore-existing local/dop-media; mc anonymous set download local/dop-media; sleep 30; done",
+      ]
+    healthcheck:
+      test: [ "CMD-SHELL", "mc anonymous get local/dop-media >/dev/null 2>&1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  backend_logs:
+  postgres_data:
+  minio_data:

@@ -78,6 +78,12 @@ def test_hash_refresh_token_is_deterministic_and_not_plaintext() -> None:
     assert len(first_hash) == 64
 
 
+def test_refresh_cookie_path_includes_api_prefix(monkeypatch) -> None:
+    monkeypatch.setattr(settings, "api_prefix", "/api")
+
+    assert settings.refresh_cookie_path == "/api/auth"
+
+
 def test_get_client_ip_prefers_forwarded_header_when_proxy_is_trusted(monkeypatch) -> None:
     monkeypatch.setattr(settings, "trust_proxy_headers", True)
     request = make_request(
