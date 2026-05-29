@@ -1,5 +1,5 @@
 from datetime import timedelta
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urlsplit
 import uuid
 
 from minio import Minio
@@ -21,12 +21,34 @@ def get_media_kind_by_content_type(content_type: str) -> MediaKind:
     raise ValueError("Unsupported media content type")
 
 
-minio_client = Minio(
-    settings.s3_endpoint_url.removeprefix(r"http://").removeprefix(r"https://"),
-    access_key=settings.s3_access_key,
-    secret_key=settings.s3_secret_key.get_secret_value(),
-    secure=False,
-)
+def parse_minio_endpoint_url(endpoint_url: str) -> tuple[str, bool]:
+    parsed = urlsplit(endpoint_url)
+
+    if parsed.scheme and parsed.netloc:
+        return parsed.netloc, parsed.scheme == "https"
+
+    return (
+        endpoint_url.removeprefix("http://").removeprefix("https://").strip("/"),
+        False,
+    )
+
+
+def build_minio_client(endpoint_url: str) -> Minio:
+    endpoint, secure = parse_minio_endpoint_url(endpoint_url)
+    return Minio(
+        endpoint,
+        access_key=settings.s3_access_key,
+        secret_key=settings.s3_secret_key.get_secret_value(),
+        secure=secure,
+        region=settings.s3_region,
+    )
+
+
+minio_client = build_minio_client(settings.s3_endpoint_url)
+
+
+def get_presigned_minio_client() -> Minio:
+    return build_minio_client(settings.s3_presigned_url_base or settings.s3_endpoint_url)
 
 
 def build_media_payload(
@@ -44,33 +66,11 @@ def build_media_payload(
 
 def get_presigned_put_url(bucket_name: str, object_name: str) -> str:
     """Возвращает временный URL для прямой загрузки объекта в S3-совместимое хранилище."""
-    upload_url: str = minio_client.get_presigned_url(
+    return get_presigned_minio_client().get_presigned_url(
         bucket_name=bucket_name,
         object_name=object_name,
         expires=timedelta(minutes=15),
         method="PUT",
-    )
-    return replace_presigned_url_base(upload_url)
-
-
-def replace_presigned_url_base(upload_url: str) -> str:
-    if not settings.s3_presigned_url_base:
-        return upload_url
-
-    parsed_upload_url = urlsplit(upload_url)
-    parsed_public_base = urlsplit(settings.s3_presigned_url_base.rstrip("/"))
-
-    if not parsed_public_base.scheme or not parsed_public_base.netloc:
-        return upload_url
-
-    return urlunsplit(
-        (
-            parsed_public_base.scheme,
-            parsed_public_base.netloc,
-            parsed_upload_url.path,
-            parsed_upload_url.query,
-            parsed_upload_url.fragment,
-        )
     )
 
 

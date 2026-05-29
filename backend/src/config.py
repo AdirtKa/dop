@@ -71,6 +71,11 @@ class Settings(BaseSettings):
         alias="S3_BUCKET_NAME",
     )
 
+    s3_region: str = Field(
+        default="us-east-1",
+        alias="S3_REGION",
+    )
+
     s3_public_url: str = Field(
         default="http://127.0.0.1:9000/dop-media",
         alias="S3_PUBLIC_URL",
